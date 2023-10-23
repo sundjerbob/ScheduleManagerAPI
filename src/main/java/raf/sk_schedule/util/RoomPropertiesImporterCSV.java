@@ -7,14 +7,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class RoomPropertiesImporterCSV {
 
-    public static List<RoomProperties> importRoomsCSV(String csvPath) throws IOException {
+    public static Map<String, RoomProperties> importRoomsCSV(String csvPath) throws IOException {
 
-        List<RoomProperties> roomPropertiesList = new ArrayList<>();
+        Map<String, RoomProperties> roomPropertiesMap = new HashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(csvPath));
         String line;
 
@@ -30,14 +32,11 @@ public class RoomPropertiesImporterCSV {
 
         for (int i = 0; i < columnNames.length; i++) {
             String columnName = columnNames[i].trim().toLowerCase();
-            if (columnName.equals("name")) {
-                nameIndex = i;
-            } else if (columnName.equals("capacity")) {
-                capacityIndex = i;
-            } else if (columnName.equals("has_computers")) {
-                hasComputersIndex = i;
-            } else if (columnName.equals("has_projector")) {
-                hasProjectorIndex = i;
+            switch (columnName) {
+                case "name" -> nameIndex = i;
+                case "capacity" -> capacityIndex = i;
+                case "has_computers" -> hasComputersIndex = i;
+                case "has_projector" -> hasProjectorIndex = i;
             }
         }
 
@@ -58,6 +57,7 @@ public class RoomPropertiesImporterCSV {
             boolean hasProjector = Boolean.parseBoolean(values[hasProjectorIndex].trim());
 
             RoomProperties.Builder roomBuilder = new RoomProperties.Builder()
+                    .setName(name)
                     .setCapacity(capacity)
                     .setHasComputers(hasComputers)
                     .setHasProjector(hasProjector);
@@ -70,13 +70,12 @@ public class RoomPropertiesImporterCSV {
             }
 
             RoomProperties roomProperties = roomBuilder.build();
-            roomPropertiesList.add(roomProperties);
+            roomPropertiesMap.put(roomProperties.getName(), roomProperties);
         }
 
-
         reader.close();
-        return roomPropertiesList;
 
+        return roomPropertiesMap;
     }
 
 }

@@ -10,10 +10,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static raf.sk_schedule.api.ScheduleManager.dateFormat;
-import static raf.sk_schedule.api.ScheduleManager.dateTimeFormat;
 
 public class ScheduleSlot {
+    public static String dateFormat = "yyyy-MM-dd";
+
+    public static String dateTimeFormat = "yyyy-MM-dd HH:mm";
 
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateTimeFormat);
     private Date start;
@@ -42,9 +43,9 @@ public class ScheduleSlot {
         //  2.start >= 1.start >= 2.end >= 1.end // { [-\\-} ]
 
         return
-                (this.startTime() <= otherSlot.startTime() && otherSlot.startTime() < this.endTime())
+                (this.getStart().getTime() <= otherSlot.getStart().getTime() && otherSlot.getStart().getTime() < this.getEnd().getTime())
                         ||
-                        (otherSlot.startTime() <= this.startTime() && this.startTime() < otherSlot.endTime());
+                        (otherSlot.getStart().getTime() <= this.getStart().getTime() && this.getStart().getTime() < otherSlot.getEnd().getTime());
 
     }
 
@@ -55,44 +56,25 @@ public class ScheduleSlot {
             return 0; // Return 0 if there is collision
 
 
-        if (this.startTime() < otherSlot.startTime())
+        if (this.getStart().getTime() < otherSlot.getStart().getTime())
             // returns positive number
-            return otherSlot.startTime() - this.endTime();
+            return otherSlot.getStart().getTime() - this.getEnd().getTime();
 
-        else if (otherSlot.startTime() < this.startTime())
+        else if (otherSlot.getStart().getTime() < this.getStart().getTime())
             // returns negative number
-            return otherSlot.endTime() - this.startTime();
+            return otherSlot.getEnd().getTime() - this.getStart().getTime();
 
         throw new ScheduleException("Calculate difference between schedule slots failed.");
 
     }
 
 
-    /**
-     * Parses the start time of this ScheduleSlot and returns it as a Date object.
-     *
-     * @return The start time of this ScheduleSlot as a Date object.
-     * @throws ParseException If the start time cannot be parsed.
-     */
-    public long startTime() throws ParseException {
-
-        return start.getTime();
-    }
-
-    /**
-     * Calculates the end time of this ScheduleSlot and returns it as a Date object.
-     *
-     * @return The end time of this ScheduleSlot as a Date object.
-     * @throws ParseException If the start time cannot be parsed.
-     */
-    public long endTime() throws ParseException {
-
-        return startTime() + duration * 60 * 1000;
-    }
-
-
-    public Date getStartDate() {
+    public Date getStart() {
         return start;
+    }
+
+    public Date getEnd() {
+        return new Date(start.getTime() + duration * 60 * 1000);
     }
 
     public String getStartAsString() throws ParseException {
@@ -100,8 +82,8 @@ public class ScheduleSlot {
 
     }
 
-    public String getEndAsString() throws  ParseException {
-        return dateFormatter.format(new Date(startTime() + (duration * 60 * 1000)));
+    public String getEndAsString() throws ParseException {
+        return dateFormatter.format(getEnd());
     }
 
     public long getDuration() {
@@ -120,6 +102,7 @@ public class ScheduleSlot {
     public void setStart(Date start) {
         this.start = start;
     }
+
     public void setStart(String start) throws ParseException {
         this.start = dateFormatter.parse(start);
     }
@@ -128,7 +111,7 @@ public class ScheduleSlot {
         this.duration = duration;
     }
 
-    public void setDurationEnd(Date endingTime) {
+    public void setEnd(Date endingTime) {
         duration = (start.getTime() - endingTime.getTime()) / (1000 * 60);
     }
 
@@ -148,8 +131,11 @@ public class ScheduleSlot {
 
     public static class Builder {
         private Date start;
+
+
         private long duration;
         private RoomProperties location;
+
 
         private Map<String, Object> attributes;
 
@@ -170,15 +156,23 @@ public class ScheduleSlot {
             return this;
         }
 
+        public Builder setEnd(Date endingTime) {
+            duration = (start.getTime() - endingTime.getTime()) / (1000 * 60);
+            return this;
+        }
+
+        public Builder setEnd(String end) throws ParseException {
+            duration =  start.getTime() - dateFormatter.parse(end).getTime() / (1000 * 60);
+            return this;
+        }
+
+
         public Builder setDuration(long duration) {
             this.duration = duration;
             return this;
         }
 
-        public Builder setDurationEnd(Date endingTime) {
-            duration = (start.getTime() - endingTime.getTime()) / (1000 * 60);
-            return this;
-        }
+
         public Builder setLocation(RoomProperties location) {
             this.location = location;
             return this;
@@ -193,7 +187,8 @@ public class ScheduleSlot {
 
             if (start == null)
                 throw new ScheduleException("ScheduleSlot builder: the start has to be defined.");
-            if (duration < 0)
+
+            if (duration <= 0)
                 throw new ScheduleException("ScheduleSlot builder: the duration has to be a positive whole number of minutes.");
             if (location == null)
                 throw new ScheduleException("ScheduleSlot builder: every slot has to be bound to specific room in or in this context location.");
