@@ -60,17 +60,21 @@ public class ScheduleSlotImporterCSV {
 
             String start = values[startIndex].trim();
             String location = values[locationIndex].trim();
-            long duration = durationIndex != -1 ? Long.parseLong(values[durationIndex].trim()) : -1;
-            String end = values[endIndex].trim();
+            long duration = -1;
+            String end = "";
+            if (durationIndex != -1)
+                duration = Long.parseLong(values[durationIndex].trim());
+            else
+                end = values[endIndex].trim();
 
             // Create a ScheduleSlot instance and add attributes for mandatory columns
             ScheduleSlot.Builder slotBuilder = new ScheduleSlot.Builder()
                     .setStart(start)
                     .setLocation(rooms.get(location));
             if (duration != -1) {
-                slotBuilder.setAttribute("duration", duration);
+                slotBuilder.setDuration(duration);
             } else {
-                slotBuilder.setAttribute("end", end);
+                slotBuilder.setEnd(end);
             }
 
             // Add additional attributes for columns beyond the mandatory ones
@@ -81,7 +85,8 @@ public class ScheduleSlotImporterCSV {
                 }
             }
 
-            ScheduleSlot slot = slotBuilder.build();
+            scheduleSlotsList.add(slotBuilder.build());
+
         }
 
         reader.close();

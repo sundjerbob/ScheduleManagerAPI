@@ -1,9 +1,11 @@
 package raf.sk_schedule.api;
 
+import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.filter.SearchCriteria;
 import raf.sk_schedule.model.RoomProperties;
 import raf.sk_schedule.model.ScheduleSlot;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -22,53 +24,54 @@ public interface ScheduleManager {
      */
     void initialize(Date startDate, Date endDate);
 
+    public int loadRoomsSCV(String csvPath) throws IOException;
+
+    public int loadScheduleSCV(String csvPath) throws IOException;
+    /**
+     * Checks weather the schedule contains the room with specified name.
+     * @param roomName name of the room you are looking for.
+     *
+     */
+
+
+    public boolean hasRoom(String roomName);
+
     /**
      * Add a room to the schedule.
      *
      * @param properties The properties of the room (e.g., name, capacity, equipment).
-     * @return True if the room was successfully added; false otherwise.
      */
-    boolean addRoom(RoomProperties properties);
+    void addRoom(RoomProperties properties);
 
     /**
      * Update the properties of an existing room in the schedule.
      *
      * @param name    The name of the room to be updated.
      * @param newProp The updated properties of the room.
-     * @return True if the room was successfully updated; false otherwise.
+     * @throws ScheduleException is thrown if there was no room with name equal to name param value.
      */
-    boolean updateRoom(String name, RoomProperties newProp);
+    void updateRoom(String name, RoomProperties newProp);
 
     /**
      * Delete a room from the schedule.
      *
      * @param name The name of the room to be deleted.
-     * @return True if the room was successfully deleted; false otherwise.
+     * @throws ScheduleException is thrown if there was no room with name equal to name param value.
      */
-    boolean deleteRoom(String name);
+    void deleteRoom(String name) throws ScheduleException;
+
+    public RoomProperties getRoom(String name);
 
     /**
      * Add a time slot to the schedule.
      *
      * @param timeSlot The time slot to be added.
      * @return True if the time slot was successfully added; false otherwise.
-     * @throws ParseException If there is an issue parsing the time slot.
+     * @throws ParseException    If there is an issue parsing the time slot.
+     * @throws ScheduleException if a slot is already occupied
      */
-    boolean scheduleTimeSlot(ScheduleSlot timeSlot) throws ParseException;
+    boolean scheduleTimeSlot(ScheduleSlot timeSlot) throws ParseException, ScheduleException;
 
-    /**
-     * Books a repetitive time slot that recurs every week on the same weekday and at the same time, within a specified time interval.
-     *
-     * @param dayOfTheWeek The day of the week for which the time slot should recur (e.g., "Monday", "Tuesday").
-     * @param startTime    The start time of the repetitive time slot in the format "HH:mm" (e.g., "08:30").
-     * @param endTime      The end time of the repetitive time slot in the format "HH:mm" (e.g., "10:00").
-     * @param duration     The duration of each individual time slot in minutes.
-     * @param startingFrom The date from which the repetitive time slots should start recurring.
-     * @param until        The date until which the repetitive time slots should continue recurring.
-     *
-     * @return True if the repetitive time slots were successfully added; false otherwise.
-     */
-    boolean scheduleRepetitiveSlot(String dayOfTheWeek, String startTime, String endTime, long duration, Date startingFrom, Date until);
 
     /**
      * Delete a time slot from the schedule.
@@ -158,6 +161,9 @@ public interface ScheduleManager {
      * @param upperBound     The upper date bound for export. If null, it will be the latest date in the schedule.
      */
     void exportFilteredScheduleJSON(SearchCriteria searchCriteria, Date lowerBound, Date upperBound);
+
+
+    public List<RoomProperties> getAllRooms();
 
     /**
      * Get the schedule within specified date bounds.

@@ -2,6 +2,7 @@ package raf.sk_schedule.model;
 
 
 import raf.sk_schedule.exception.ScheduleException;
+import raf.sk_schedule.util.ScheduleMapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,10 @@ public class RoomProperties {
         this.extra = extra;
     }
 
+    @Override
+    public String toString() {
+        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + ScheduleMapper.mapToString(extra);
+    }
 
     public static class Builder {
         private String name;
@@ -74,7 +79,7 @@ public class RoomProperties {
             if (name == null || name.isEmpty())
                 throw new ScheduleException("Room description has to have a name.");
 
-            return new RoomProperties(name,capacity, hasComputers, hasProjector, extra);
+            return new RoomProperties(name, capacity, hasComputers, hasProjector, extra);
         }
     }
 

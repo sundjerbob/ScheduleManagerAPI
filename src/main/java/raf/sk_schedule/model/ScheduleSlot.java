@@ -16,6 +16,7 @@ public class ScheduleSlot {
 
     public static String dateTimeFormat = "yyyy-MM-dd HH:mm";
 
+    public static String timeFormat = "HH:mm";
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateTimeFormat);
     private Date start;
 
@@ -73,6 +74,7 @@ public class ScheduleSlot {
         return start;
     }
 
+
     public Date getEnd() {
         return new Date(start.getTime() + duration * 60 * 1000);
     }
@@ -98,6 +100,10 @@ public class ScheduleSlot {
         return attributes.get(attributesName);
     }
 
+    public boolean hasAttribute(String attributeName) {
+        return attributes.containsKey(attributeName);
+    }
+
 
     public void setStart(Date start) {
         this.start = start;
@@ -112,8 +118,13 @@ public class ScheduleSlot {
     }
 
     public void setEnd(Date endingTime) {
-        duration = (start.getTime() - endingTime.getTime()) / (1000 * 60);
+        duration = (endingTime.getTime() - start.getTime()) / (1000 * 60);
     }
+
+    public void setEnd(String end) throws ParseException {
+        duration = (dateFormatter.parse(end).getTime() - start.getTime()) / (1000 * 60);
+    }
+
 
     public void setLocation(RoomProperties location) {
         this.location = location;
@@ -157,12 +168,12 @@ public class ScheduleSlot {
         }
 
         public Builder setEnd(Date endingTime) {
-            duration = (start.getTime() - endingTime.getTime()) / (1000 * 60);
+            duration = (endingTime.getTime() - start.getTime()) / (1000 * 60);
             return this;
         }
 
         public Builder setEnd(String end) throws ParseException {
-            duration =  start.getTime() - dateFormatter.parse(end).getTime() / (1000 * 60);
+            duration = (dateFormatter.parse(end).getTime() - start.getTime()) / (1000 * 60);
             return this;
         }
 
@@ -189,7 +200,7 @@ public class ScheduleSlot {
                 throw new ScheduleException("ScheduleSlot builder: the start has to be defined.");
 
             if (duration <= 0)
-                throw new ScheduleException("ScheduleSlot builder: the duration has to be a positive whole number of minutes.");
+                throw new ScheduleException("ScheduleSlot builder: the duration is:" + duration + "and it has to be a positive whole number of minutes;");
             if (location == null)
                 throw new ScheduleException("ScheduleSlot builder: every slot has to be bound to specific room in or in this context location.");
 
