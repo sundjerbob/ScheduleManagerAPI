@@ -1,4 +1,4 @@
-package raf.sk_schedule.util;
+package raf.sk_schedule.util.importer;
 
 import raf.sk_schedule.exception.ScheduleIOException;
 import raf.sk_schedule.model.RoomProperties;

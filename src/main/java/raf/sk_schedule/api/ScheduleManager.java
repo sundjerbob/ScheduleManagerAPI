@@ -22,15 +22,16 @@ public interface ScheduleManager {
      * @param startDate The date when the schedule's accounting period starts.
      * @param endDate   The date when the schedule's accounting period ends.
      */
-    void initialize(Date startDate, Date endDate);
+    void initialize(String startDate, String endDate);
 
     public int loadRoomsSCV(String csvPath) throws IOException;
 
     public int loadScheduleSCV(String csvPath) throws IOException;
+
     /**
      * Checks weather the schedule contains the room with specified name.
-     * @param roomName name of the room you are looking for.
      *
+     * @param roomName name of the room you are looking for.
      */
 
 
@@ -104,7 +105,7 @@ public interface ScheduleManager {
      * @param endDate   The end date for the range. If null, it will be the latest date in the schedule.
      * @return A list of free time slots.
      */
-    List<ScheduleSlot> getFreeTimeSlots(Date startDate, Date endDate);
+    List<ScheduleSlot> getFreeTimeSlots(String startDate, String endDate);
 
     /**
      * Search for time slots based on specific criteria.
@@ -134,7 +135,7 @@ public interface ScheduleManager {
      * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
      * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
      */
-    void exportScheduleCSV(Date lowerBound, Date upperBound);
+    void exportScheduleCSV(String lowerBound, String upperBound);
 
     /**
      * Export the schedule data to a JSON file within specified date bounds.
@@ -142,7 +143,7 @@ public interface ScheduleManager {
      * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
      * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
      */
-    void exportScheduleJSON(Date lowerBound, Date upperBound);
+    void exportScheduleJSON(String lowerBound, String upperBound);
 
     /**
      * Export the filtered schedule data to a CSV file within specified date bounds.

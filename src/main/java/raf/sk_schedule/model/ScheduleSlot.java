@@ -1,8 +1,7 @@
 package raf.sk_schedule.model;
 
-import org.jetbrains.annotations.NotNull;
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.util.ScheduleMapper;
+import raf.sk_schedule.util.exporter.ScheduleExporter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +34,7 @@ public class ScheduleSlot {
     }
 
 
-    public boolean isCollidingWith(@NotNull ScheduleSlot otherSlot) throws ParseException {
+    public boolean isCollidingWith(ScheduleSlot otherSlot) throws ParseException {
 
         //  collision cases for [1] {2}          //
         //  1.start >= 2.start >= 2.end >= 1.end // [ {-\\-} ]
@@ -80,7 +79,7 @@ public class ScheduleSlot {
     }
 
     public String getStartAsString() throws ParseException {
-        return dateFormatter.format(start);
+        return dateFormatter.format(start) + ' ' + start.getDay();
 
     }
 
@@ -102,6 +101,10 @@ public class ScheduleSlot {
 
     public boolean hasAttribute(String attributeName) {
         return attributes.containsKey(attributeName);
+    }
+
+    public Map<String, Object> getAttributes(){
+        return attributes;
     }
 
 
@@ -137,7 +140,7 @@ public class ScheduleSlot {
 
     @Override
     public String toString() {
-        return "starts: " + start + " duration: " + duration + " location: " + location.getName() + ScheduleMapper.mapToString(attributes);
+        return "starts: " + start + " duration: " + duration + " location: " + location.getName() + ScheduleExporter.mapToString(attributes);
     }
 
     public static class Builder {
@@ -148,7 +151,7 @@ public class ScheduleSlot {
         private RoomProperties location;
 
 
-        private Map<String, Object> attributes;
+        private final Map<String, Object> attributes;
 
         public Builder() {
             start = null;

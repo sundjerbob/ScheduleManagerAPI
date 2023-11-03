@@ -1,6 +1,5 @@
-package raf.sk_schedule.util;
+package raf.sk_schedule.util.importer;
 
-import org.jetbrains.annotations.NotNull;
 import raf.sk_schedule.exception.ScheduleIOException;
 import raf.sk_schedule.model.RoomProperties;
 import raf.sk_schedule.model.ScheduleSlot;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class ScheduleSlotImporterCSV {
 
 
-    public static @NotNull List<ScheduleSlot> importRoomsCSV(String csvPath, Map<String, RoomProperties> rooms) throws IOException, ParseException {
+    public static  List<ScheduleSlot> importRoomsCSV(String csvPath, Map<String, RoomProperties> rooms) throws IOException, ParseException {
 
         List<ScheduleSlot> scheduleSlotsList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(csvPath));
