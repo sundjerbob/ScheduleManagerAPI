@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * This class represents a universal time slot within the scheduling component.
+ */
 public class ScheduleSlot {
     public static String dateFormat = "yyyy-MM-dd";
 
@@ -17,14 +19,25 @@ public class ScheduleSlot {
 
     public static String timeFormat = "HH:mm";
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateTimeFormat);
+    /**
+     * Date and time when the time slot starts.
+     */
     private Date start;
 
+    /**
+     * Duration of the time slot in minutes.
+     */
     private long duration;
 
+    /**
+     * Location (room) where the time slot is scheduled.
+     */
     private RoomProperties location;
 
+    /**
+     * Additional attributes associated with the time slot.
+     */
     private Map<String, Object> attributes;
-
 
     private ScheduleSlot(Date start, long duration, RoomProperties location, Map<String, Object> attributes) {
         this.start = start;
@@ -33,7 +46,13 @@ public class ScheduleSlot {
         this.attributes = attributes;
     }
 
-
+    /**
+     * Checks if this time slot is colliding with another time slot.
+     *
+     * @param otherSlot The other time slot to check for collisions.
+     * @return True if there's a collision, false otherwise.
+     * @throws ParseException If there is an issue parsing the time slots.
+     */
     public boolean isCollidingWith(ScheduleSlot otherSlot) throws ParseException {
 
         //  collision cases for [1] {2}          //
@@ -50,6 +69,13 @@ public class ScheduleSlot {
     }
 
 
+    /**
+     * Calculate the time difference between this time slot and another time slot.
+     *
+     * @param otherSlot The other time slot for the calculation.
+     * @return Time difference in minutes.
+     * @throws ParseException If there is an issue parsing the time slots.
+     */
     public long calculateTimeDifference(ScheduleSlot otherSlot) throws ParseException {
 
         if (isCollidingWith(otherSlot))
@@ -103,7 +129,7 @@ public class ScheduleSlot {
         return attributes.containsKey(attributeName);
     }
 
-    public Map<String, Object> getAttributes(){
+    public Map<String, Object> getAttributes() {
         return attributes;
     }
 
