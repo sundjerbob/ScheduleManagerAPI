@@ -1,13 +1,43 @@
 package raf.sk_schedule.util.exporter;
 
+import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.model.RoomProperties;
 import raf.sk_schedule.model.ScheduleSlot;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ScheduleExporter {
 
+
+    public static String listToJSON(List<Object> objects) throws ParseException {
+        if (objects == null)
+            return null;
+        if (objects.isEmpty())
+            return "[ ]";
+
+
+        if (objects.get(0) instanceof ScheduleSlot) {
+            List<ScheduleSlot> scheduleSlots = new ArrayList<>();
+            for (Object obj : objects) {
+                scheduleSlots.add((ScheduleSlot) obj);
+            }
+
+            StringBuilder json = new StringBuilder("[");
+            for (ScheduleSlot slot : scheduleSlots) {
+                json.append(slotToJSON(slot)).append(",");
+            }
+            json.setLength(json.length() - 1); // Remove the trailing comma
+            json.append("]");
+
+            return json.toString();
+
+        } else
+            throw new ScheduleException("ScheduleExporter: \"I support only serialization of ScheduleSlot objects!\"");
+
+    }
 
     public static String slotToJSON(ScheduleSlot slot) throws ParseException {
         StringBuilder json = new StringBuilder();
