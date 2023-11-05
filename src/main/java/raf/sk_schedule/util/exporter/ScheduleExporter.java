@@ -9,7 +9,7 @@ import java.util.Map;
 public class ScheduleExporter {
 
 
-    public String slotToJSON(ScheduleSlot slot) throws ParseException {
+    public static String slotToJSON(ScheduleSlot slot) throws ParseException {
         StringBuilder json = new StringBuilder();
         json.append("{");
         json.append("\"start\":\"").append(slot.getStartAsString()).append("\",");
@@ -31,7 +31,7 @@ public class ScheduleExporter {
         return json.toString();
     }
 
-    public String roomToJSON(RoomProperties room) {
+    public static String roomToJSON(RoomProperties room) {
         StringBuilder json = new StringBuilder();
         json.append("{");
         json.append("\"name\":\"").append(room.getName()).append("\",");
@@ -55,7 +55,7 @@ public class ScheduleExporter {
     }
 
     // Helper method to serialize attribute values to JSON
-    private String serializeValue(Object value) {
+    private static String serializeValue(Object value) {
         if (value instanceof String) {
             return "\"" + value + "\"";
         } else if (value instanceof Number || value instanceof Boolean) {

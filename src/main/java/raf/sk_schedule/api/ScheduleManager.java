@@ -7,7 +7,6 @@ import raf.sk_schedule.model.ScheduleSlot;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -156,13 +155,6 @@ public interface ScheduleManager {
      */
     List<ScheduleSlot> searchTimeSlots(SearchCriteria criteria);
 
-    /**
-     * Load schedule data from a file.
-     *
-     * @param filePath The path to the file to load.
-     */
-    void loadScheduleFromFile(String filePath);
-
 
     /**
      * Export the schedule data to a CSV file within specified date bounds.
@@ -201,7 +193,6 @@ public interface ScheduleManager {
      * @param upperBound     The upper date bound for export. If null, it will be the latest date in the schedule.
      */
     int exportFilteredScheduleJSON(String filePath, SearchCriteria searchCriteria, String lowerBound, String upperBound);
-
 
     /**
      * Returns a list of all room properties available in the schedule.
