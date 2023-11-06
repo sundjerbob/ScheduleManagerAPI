@@ -3,7 +3,6 @@ package raf.sk_schedule.util.exporter;
 import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.model.RoomProperties;
 import raf.sk_schedule.model.ScheduleSlot;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +25,13 @@ public class ScheduleExporter {
             }
 
             StringBuilder json = new StringBuilder("[");
+
             for (ScheduleSlot slot : scheduleSlots) {
                 json.append(slotToJSON(slot)).append(",");
             }
+
             json.setLength(json.length() - 1); // Remove the trailing comma
+
             json.append("]");
 
             return json.toString();
@@ -60,6 +62,7 @@ public class ScheduleExporter {
         json.append("}");
         return json.toString();
     }
+
 
     public static String roomToJSON(RoomProperties room) {
         StringBuilder json = new StringBuilder();

@@ -166,15 +166,6 @@ public interface ScheduleManager {
     int exportScheduleCSV(String filePath, String lowerBound, String upperBound);
 
     /**
-     * Export the schedule data to a JSON file within specified date bounds.
-     *
-     * @param filePath   The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
-     * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
-     */
-    int exportScheduleJSON(String filePath, String lowerBound, String upperBound);
-
-    /**
      * Export the filtered schedule data to a CSV file within specified date bounds.
      *
      * @param filePath       The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
@@ -183,6 +174,15 @@ public interface ScheduleManager {
      * @param upperBound     The upper date bound for export. If null, it will be the latest date in the schedule.
      */
     int exportFilteredScheduleCSV(String filePath, SearchCriteria searchCriteria, String lowerBound, String upperBound);
+
+    /**
+     * Export the schedule data to a JSON file within specified date bounds.
+     *
+     * @param filePath   The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
+     * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
+     */
+    int exportScheduleJSON(String filePath, String lowerBound, String upperBound);
 
     /**
      * Export the filtered schedule data to a JSON file within specified date bounds.
