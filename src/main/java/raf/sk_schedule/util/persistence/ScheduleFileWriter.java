@@ -1,5 +1,8 @@
 package raf.sk_schedule.util.persistence;
 
+import raf.sk_schedule.exception.ScheduleException;
+import raf.sk_schedule.exception.ScheduleIOException;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,7 +13,7 @@ public class ScheduleFileWriter {
 
     public static File createFileIfNotExists(String filePath) {
         File file = new File(filePath);
-
+        System.out.println(filePath);
         if (!file.exists()) {
             // Get the file name from the path
             String fileName = file.getName();
@@ -23,10 +26,10 @@ public class ScheduleFileWriter {
                     System.out.println("File created: " + newFile.getAbsolutePath());
                     return newFile; // Return the newly created File object
                 } else {
-                    System.err.println("Failed to create the file.");
+                    throw new ScheduleException("Failed to create the file.");
                 }
             } catch (IOException e) {
-                System.err.println("An error occurred: " + e.getMessage());
+                throw new ScheduleIOException( "An error occurred: " + e.getMessage());
             }
         }
 

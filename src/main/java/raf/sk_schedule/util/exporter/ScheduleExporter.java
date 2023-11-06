@@ -11,7 +11,7 @@ import java.util.Map;
 public class ScheduleExporter {
 
 
-    public static String listToJSON(List<Object> objects) throws ParseException {
+    public static String listToJSON(List<?> objects) throws ParseException {
         if (objects == null)
             return null;
         if (objects.isEmpty())
