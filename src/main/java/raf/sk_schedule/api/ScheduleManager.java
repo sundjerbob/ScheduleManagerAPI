@@ -7,6 +7,7 @@ import raf.sk_schedule.model.ScheduleSlot;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -16,6 +17,12 @@ import java.util.List;
  * Universal time related data formats are required and used by <code>ScheduleSlot<code/> class.
  */
 public interface ScheduleManager {
+
+    public static String dateFormat = "yyyy-MM-dd";
+
+    public static String timeFormat = "HH:mm";
+
+    public static String dateTimeFormat = "yyyy-MM-dd HH:mm";
 
 
     /**

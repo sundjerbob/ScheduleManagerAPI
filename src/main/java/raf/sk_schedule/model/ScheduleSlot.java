@@ -5,20 +5,21 @@ import raf.sk_schedule.util.exporter.ScheduleExporter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static raf.sk_schedule.api.ScheduleManager.dateTimeFormat;
 
 /**
  * This class represents a universal time slot within the scheduling component.
  */
 public class ScheduleSlot {
-    public static String dateFormat = "yyyy-MM-dd";
 
-    public static String dateTimeFormat = "yyyy-MM-dd HH:mm";
 
-    public static String timeFormat = "HH:mm";
-    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateTimeFormat);
+    private static final SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(dateTimeFormat);
+
     /**
      * Date and time when the time slot starts.
      */
@@ -94,6 +95,18 @@ public class ScheduleSlot {
 
     }
 
+    public String getDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(start);
+
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        String[] daysOfWeek = new String[]{
+                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+        };
+
+        return daysOfWeek[dayOfWeek - 1];
+    }
 
     public Date getStart() {
         return start;
@@ -105,12 +118,12 @@ public class ScheduleSlot {
     }
 
     public String getStartAsString() throws ParseException {
-        return dateFormatter.format(start) + ' ' + start.getDay();
+        return dateTimeFormatter.format(start) + ' ' + start.getDay();
 
     }
 
     public String getEndAsString() throws ParseException {
-        return dateFormatter.format(getEnd());
+        return dateTimeFormatter.format(getEnd());
     }
 
     public long getDuration() {
@@ -139,7 +152,7 @@ public class ScheduleSlot {
     }
 
     public void setStart(String start) throws ParseException {
-        this.start = dateFormatter.parse(start);
+        this.start = dateTimeFormatter.parse(start);
     }
 
     public void setDuration(long duration) {
@@ -151,7 +164,7 @@ public class ScheduleSlot {
     }
 
     public void setEnd(String end) throws ParseException {
-        duration = (dateFormatter.parse(end).getTime() - start.getTime()) / (1000 * 60);
+        duration = (dateTimeFormatter.parse(end).getTime() - start.getTime()) / (1000 * 60);
     }
 
 
@@ -192,7 +205,7 @@ public class ScheduleSlot {
         }
 
         public Builder setStart(String start) throws ParseException {
-            this.start = dateFormatter.parse(start);
+            this.start = dateTimeFormatter.parse(start);
             return this;
         }
 
@@ -202,7 +215,7 @@ public class ScheduleSlot {
         }
 
         public Builder setEnd(String end) throws ParseException {
-            duration = (dateFormatter.parse(end).getTime() - start.getTime()) / (1000 * 60);
+            duration = (dateTimeFormatter.parse(end).getTime() - start.getTime()) / (1000 * 60);
             return this;
         }
 
