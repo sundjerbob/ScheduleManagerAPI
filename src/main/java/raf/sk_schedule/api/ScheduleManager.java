@@ -7,14 +7,13 @@ import raf.sk_schedule.model.ScheduleSlot;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * This interface represents the scheduling component API.
  * The universal date format of this time scheduling api is yyyy-mm-dd for example: "2023-10-14"
  * The universal time format of this time scheduling api is HH:MM for example: "04:20"
- * Universal time related data formats are required and used by <code>ScheduleSlot<code/> class.
+ * Universal time related data formats are required and used by ScheduleSlot class.
  */
 public interface ScheduleManager {
 
