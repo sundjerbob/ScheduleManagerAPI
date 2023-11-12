@@ -2,7 +2,7 @@ package raf.sk_schedule.model;
 
 
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.util.exporter.ScheduleExporter;
+import raf.sk_schedule.util.exporter.ScheduleExporterJSON;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class RoomProperties {
 
     @Override
     public String toString() {
-        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + ScheduleExporter.mapToString(extra);
+        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + ScheduleExporterJSON.atributeMapToString(extra);
     }
 
     public static class Builder {

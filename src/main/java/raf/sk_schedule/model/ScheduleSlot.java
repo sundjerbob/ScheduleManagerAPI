@@ -1,7 +1,6 @@
 package raf.sk_schedule.model;
 
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.util.exporter.ScheduleExporter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static raf.sk_schedule.api.ScheduleManager.dateTimeFormat;
+import static raf.sk_schedule.util.exporter.ScheduleSerializer.serializeMap;
 
 /**
  * This class represents a universal time slot within the scheduling component.
@@ -38,7 +38,7 @@ public class ScheduleSlot {
     /**
      * Additional attributes associated with the time slot.
      */
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     private ScheduleSlot(Date start, long duration, RoomProperties location, Map<String, Object> attributes) {
         this.start = start;
@@ -56,11 +56,11 @@ public class ScheduleSlot {
      */
     public boolean isCollidingWith(ScheduleSlot otherSlot) throws ParseException {
 
-        //  collision cases for [1] {2}          //
-        //  1.start >= 2.start >= 2.end >= 1.end // [ {-\\-} ]
-        //  1.start >= 2.start >= 1.end >= 2.end // [ {-\\-] }
-        //  2.start >= 1.start >= 1.end >= 2.end // { [-\\-] }
-        //  2.start >= 1.start >= 2.end >= 1.end // { [-\\-} ]
+        //  collision cases for [1] {2}
+        //  1.start >= 2.start >= 2.end >= 1.end // [ {\\\\} ]
+        //  1.start >= 2.start >= 1.end >= 2.end // [ {\\\\] }
+        //  2.start >= 1.start >= 1.end >= 2.end // { [\\\\] }
+        //  2.start >= 1.start >= 2.end >= 1.end // { [\\\\} ]
 
         return
                 (this.getStart().getTime() <= otherSlot.getStart().getTime() && otherSlot.getStart().getTime() < this.getEnd().getTime())
@@ -172,14 +172,14 @@ public class ScheduleSlot {
         this.location = location;
     }
 
-    public ScheduleSlot setAttribute(String attributeName, Object attributeValue) {
+    public ScheduleSlot setAttribute(String attributeName, String attributeValue) {
         attributes.put(attributeName, attributeValue);
         return this;
     }
 
     @Override
     public String toString() {
-        return "starts: " + start + " duration: " + duration + " location: " + location.getName() + ScheduleExporter.mapToString(attributes);
+        return "starts: " + start + " duration: " + duration + " location: " + location.getName() + serializeMap(attributes);
     }
 
     public static class Builder {
