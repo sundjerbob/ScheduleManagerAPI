@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static raf.sk_schedule.util.exporter.ScheduleSerializer.serializeValue;
+import static raf.sk_schedule.util.exporter.ScheduleSerializer.serializeMap;
+import static raf.sk_schedule.util.exporter.ScheduleSerializer.serializeObject;
+
 
 public class ScheduleExporterJSON {
 
@@ -54,7 +56,7 @@ public class ScheduleExporterJSON {
         // Serialize attributes
         jsonSlot.append("\"attributes\":{");
         for (Map.Entry<String, Object> entry : slot.getAttributes().entrySet()) {
-            jsonSlot.append("\"").append(entry.getKey()).append("\":").append(serializeValue(entry.getValue())).append(",");
+            jsonSlot.append("\"").append(entry.getKey()).append("\":").append(serializeObject(entry.getValue())).append(",");
         }
         // Remove the trailing comma
         if (!slot.getAttributes().isEmpty()) {
@@ -77,7 +79,7 @@ public class ScheduleExporterJSON {
         // Serialize extra attributes
         jsonList.append("\"extra\":{");
         for (Map.Entry<String, Object> entry : room.getExtra().entrySet()) {
-            jsonList.append("\"").append(entry.getKey()).append("\":").append(serializeValue(entry.getValue())).append(",");
+            jsonList.append("\"").append(entry.getKey()).append("\":").append(serializeObject(entry.getValue())).append(",");
         }
         // Remove the trailing comma
         if (!room.getExtra().isEmpty()) {
@@ -87,8 +89,6 @@ public class ScheduleExporterJSON {
         jsonList.append("}");
         return jsonList.toString();
     }
-
-
 
 
 }

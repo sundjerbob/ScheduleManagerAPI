@@ -7,6 +7,8 @@ import raf.sk_schedule.util.exporter.ScheduleExporterJSON;
 import java.util.HashMap;
 import java.util.Map;
 
+import static raf.sk_schedule.util.exporter.ScheduleSerializer.serializeMap;
+
 
 public class RoomProperties {
 
@@ -28,7 +30,7 @@ public class RoomProperties {
 
     @Override
     public String toString() {
-        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + ScheduleExporterJSON.atributeMapToString(extra);
+        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + serializeMap(extra);
     }
 
     public static class Builder {
