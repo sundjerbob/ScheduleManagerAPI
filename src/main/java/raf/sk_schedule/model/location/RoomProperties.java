@@ -1,13 +1,12 @@
-package raf.sk_schedule.model;
+package raf.sk_schedule.model.location;
 
 
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.util.exporter.ScheduleExporterJSON;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static raf.sk_schedule.util.exporter.ScheduleSerializer.serializeMap;
+import static raf.sk_schedule.util.exporter.ScheduleExporterJSON.serializeObject;
 
 
 public class RoomProperties {
@@ -18,19 +17,19 @@ public class RoomProperties {
     private boolean hasComputers;
     private boolean hasProjector;
 
-    private Map<String, Object> extra;
+    private Map<String, Object> attributes;
 
-    private RoomProperties(String name, int capacity, boolean hasComputers, boolean hasProjector, Map<String, Object> extra) {
+    private RoomProperties(String name, int capacity, boolean hasComputers, boolean hasProjector, Map<String, Object> attributes) {
         this.name = name;
         this.capacity = capacity;
         this.hasComputers = hasComputers;
         this.hasProjector = hasProjector;
-        this.extra = extra;
+        this.attributes = attributes;
     }
 
     @Override
     public String toString() {
-        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + serializeMap(extra);
+        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + serializeObject(attributes);
     }
 
     public static class Builder {
@@ -42,7 +41,6 @@ public class RoomProperties {
 
         public Builder() {
             // Set default values or customize them as needed
-
             capacity = 0;
             hasComputers = false;
             hasProjector = false;
@@ -100,8 +98,8 @@ public class RoomProperties {
         return hasProjector;
     }
 
-    public Map<String, Object> getExtra() {
-        return new HashMap<>(extra);
+    public Map<String, Object> getAttributes() {
+        return new HashMap<>(attributes);
     }
 
     public void setName(String name) {
@@ -120,7 +118,4 @@ public class RoomProperties {
         this.hasProjector = hasProjector;
     }
 
-    public void setExtra(Map<String, Object> extra) {
-        this.extra = extra;
-    }
 }

@@ -2,8 +2,9 @@ package raf.sk_schedule.api;
 
 import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.filter.SearchCriteria;
-import raf.sk_schedule.model.RoomProperties;
-import raf.sk_schedule.model.ScheduleSlot;
+import raf.sk_schedule.model.schedule.RepetitiveScheduleSlot;
+import raf.sk_schedule.model.location.RoomProperties;
+import raf.sk_schedule.model.schedule.ScheduleSlot;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -13,15 +14,10 @@ import java.util.List;
  * This interface represents the scheduling component API.
  * The universal date format of this time scheduling api is yyyy-mm-dd for example: "2023-10-14"
  * The universal time format of this time scheduling api is HH:MM for example: "04:20"
+ * This is defined in Constants.java class
  * Universal time related data formats are required and used by ScheduleSlot class.
  */
 public interface ScheduleManager {
-
-    public static String dateFormat = "yyyy-MM-dd";
-
-    public static String timeFormat = "HH:mm";
-
-    public static String dateTimeFormat = "yyyy-MM-dd HH:mm";
 
 
     /**
@@ -117,7 +113,9 @@ public interface ScheduleManager {
      * @param schedulingIntervalEnd   The end date for scheduling the slot (in "yyyy-MM-dd" format).
      * @return True if the slot was successfully scheduled, false otherwise.
      */
-    boolean scheduleRepetitiveTimeSlot(String startTime, String schedulingIntervalStart, long duration, String schedulingIntervalEnd);
+    boolean scheduleRepetitiveTimeSlot(String startTime, long duration, String schedulingIntervalStart, String schedulingIntervalEnd);
+
+    boolean scheduleRepetitiveTimeSlot(RepetitiveScheduleSlot recurrenceInterval);
 
 
     /**

@@ -1,8 +1,8 @@
 package raf.sk_schedule.util.importer;
 
 import raf.sk_schedule.exception.ScheduleIOException;
-import raf.sk_schedule.model.RoomProperties;
-import raf.sk_schedule.model.ScheduleSlot;
+import raf.sk_schedule.model.location.RoomProperties;
+import raf.sk_schedule.model.schedule.ScheduleSlot;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -73,21 +73,23 @@ public class ScheduleImporter {
 
             String start = values[startIndex].trim();
             String location = values[locationIndex].trim();
-            long duration = -1;
+            int duration = -1;
             String end = "";
             if (durationIndex != -1)
-                duration = Long.parseLong(values[durationIndex].trim());
+                duration = Integer.parseInt(values[durationIndex].trim());
             else
                 end = values[endIndex].trim();
 
             // Create a ScheduleSlot instance and add attributes for mandatory columns
-            ScheduleSlot.Builder slotBuilder = new ScheduleSlot.Builder()
-                    .setStart(start)
-                    .setLocation(rooms.get(location));
+            ScheduleSlot.Builder slotBuilder =
+                    new ScheduleSlot.Builder()
+                            .setStartTime(start)
+                            .setLocation(rooms.get(location));
+
             if (duration != -1) {
                 slotBuilder.setDuration(duration);
             } else {
-                slotBuilder.setEnd(end);
+                slotBuilder.setEndTime(end);
             }
 
             // Add additional attributes for columns beyond the mandatory ones
