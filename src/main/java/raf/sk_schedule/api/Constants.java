@@ -1,6 +1,15 @@
 package raf.sk_schedule.api;
 
+/**
+ * @apiNote the class should not be instanced nor extended.
+ * Its purpose is to hold all top-level constants that are used by schedule api,
+ * and can be accessed (is visible) outside the component.
+ * Since there is no "sealed" keyword like in c#, we made constructor private.
+ */
 public abstract class Constants {
+
+    private Constants() {
+    }
 
     /**
      * The universal date format of this time scheduling api is yyyy-mm-dd for example: "2023-10-14"
