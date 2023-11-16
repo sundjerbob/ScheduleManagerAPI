@@ -13,18 +13,28 @@ public class RepetitiveScheduleMapper {
     private Date recurrenceIntervalEnd;
     private int recurrencePeriod;
 
+    private String startTime;
+    private String endTime;
     private int duration;
     private WeekDay weekDay;
 
+
+    List<ScheduleSlot> slotInstances;
     private RepetitiveScheduleMapper(
             Date recurrenceIntervalStart,
             Date recurrenceIntervalEnd,
-            int period,
+            int recurrencePeriod,
+            String startTime,
+            String endTime,
+            int duration,
             WeekDay weekDay
     ) {
         this.recurrenceIntervalStart = recurrenceIntervalStart;
         this.recurrenceIntervalEnd = recurrenceIntervalEnd;
-        this.recurrencePeriod = period;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
+        this.recurrencePeriod = recurrencePeriod;
         this.weekDay = weekDay;
     }
 
@@ -82,14 +92,19 @@ public class RepetitiveScheduleMapper {
     public static class Builder {
         private Date recurrenceIntervalStart;
         private Date recurrenceIntervalEnd;
-        private final int recurrencePeriod;
-
+        private int recurrencePeriod;
+        private String startTime;
+        private String endTime;
+        private int duration;
         private WeekDay weekDay;
 
         public Builder() {
             recurrenceIntervalStart = null;
             recurrenceIntervalEnd = null;
-            recurrencePeriod = 7;
+            recurrencePeriod = 7; //default delta is weekly or on every 7 days it rep
+            startTime = null;
+            endTime = null;
+            duration = 0;
             weekDay = null;
         }
 
@@ -118,7 +133,14 @@ public class RepetitiveScheduleMapper {
         }
 
         public RepetitiveScheduleMapper build() {
-            return new RepetitiveScheduleMapper(recurrenceIntervalStart, recurrenceIntervalEnd, recurrencePeriod, weekDay);
+            return new RepetitiveScheduleMapper(
+                    recurrenceIntervalStart,
+                    recurrenceIntervalEnd,
+                    recurrencePeriod,
+                    startTime,
+                    endTime,
+                    duration,
+                    weekDay);
         }
     }
 

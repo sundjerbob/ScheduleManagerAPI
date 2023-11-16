@@ -80,11 +80,10 @@ public class ScheduleSlot {
                     if (duration == (int) (endTimeMills - startTimeMills / (1000 * 60))) {
                         this.duration = duration;
                         this.endTime = endTime;
-                    }
-                    else
+                    } else
                         throw new ScheduleException(
                                 "End time and duration does not match. Based of off end time the calculated duration would be "
-                        + (int) (endTimeMills - startTimeMills / (1000 * 60)) + " minutes.");
+                                        + (int) (endTimeMills - startTimeMills / (1000 * 60)) + " minutes.");
 
                 }
             } else if (endTime != null) {
@@ -104,7 +103,7 @@ public class ScheduleSlot {
         this.attributes = attributes;
     }
 
-    private long getStartTimeInMillis() {
+    public long getStartTimeInMillis() {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         try {
@@ -114,7 +113,7 @@ public class ScheduleSlot {
         }
     }
 
-    private long getEndTimeInMillis() {
+    public long getEndTimeInMillis() {
         return /*|start_in_ms|*/getStartTimeInMillis()
                 + /*|millSec|*/1000
                 * /*|minutes|*/60

@@ -5,6 +5,7 @@ import raf.sk_schedule.filter.SearchCriteria;
 import raf.sk_schedule.model.schedule.RepetitiveScheduleMapper;
 import raf.sk_schedule.model.location.RoomProperties;
 import raf.sk_schedule.model.schedule.ScheduleSlot;
+import raf.sk_schedule.api.Constants.WeekDay;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -31,11 +32,15 @@ public interface ScheduleManager {
 
     /**
      * Initialize the schedule with specific starting and ending dates.
-     *'
+     *
      * @param startDate The date when the schedule's accounting period start.
      * @param endDate   The date when the schedule's accounting period ends.
      */
     void initialize(Date startDate, Date endDate);
+
+    void setExcludedWeekDays(WeekDay... days);
+
+    void setExcludedWeekDays(String... days);
 
     /**
      * Load room properties from a CSV file specified by csvPath and add them to the schedule.
