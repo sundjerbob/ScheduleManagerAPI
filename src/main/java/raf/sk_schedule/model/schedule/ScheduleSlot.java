@@ -57,12 +57,14 @@ public class ScheduleSlot {
         if (startTime == null)
             throw new ScheduleException("Starting time of ScheduleSlot not defined!");
 
+        this.startTime = startTime;
+
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            if (duration > 0) {
+                if (endTime == null) {
 
-        if (duration > 0) {
-            if (endTime == null) {
-                try {
                     this.endTime =
                             dateTimeFormat.format(
                                     new Date(
@@ -71,16 +73,33 @@ public class ScheduleSlot {
                                                     + (long) duration * 1000 * 60
                                     )
                             );
-                } catch (ParseException e) {
-                    throw new ScheduleException("Date parsing error, check date and time string formats!");
+
+                } else {
+                    long startTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + this.startTime).getTime();
+                    long endTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + endTime).getTime();
+                    if (duration == (int) (endTimeMills - startTimeMills / (1000 * 60))) {
+                        this.duration = duration;
+                        this.endTime = endTime;
+                    }
+                    else
+                        throw new ScheduleException(
+                                "End time and duration does not match. Based of off end time the calculated duration would be "
+                        + (int) (endTimeMills - startTimeMills / (1000 * 60)) + " minutes.");
 
                 }
-            } else {
+            } else if (endTime != null) {
+                this.endTime = endTime;
+                long startTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + this.startTime).getTime();
+                long endTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + endTime).getTime();
+                this.duration = (int) (endTimeMills - startTimeMills / (1000 * 60));
 
-            }
-        } else if (endTime == null)
-            throw new ScheduleException("End time and duration are both not defined thus the be occupied time couldn't be calculated!");
 
+            } else
+                throw new ScheduleException("End time and duration are both not defined thus the be occupied time couldn't be calculated!");
+        } catch (ParseException e) {
+            throw new ScheduleException("Date parsing error, check date and time string formats!");
+
+        }
         this.location = location;
         this.attributes = attributes;
     }

@@ -2,12 +2,13 @@ package raf.sk_schedule.api;
 
 import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.filter.SearchCriteria;
-import raf.sk_schedule.model.schedule.RepetitiveScheduleSlot;
+import raf.sk_schedule.model.schedule.RepetitiveScheduleMapper;
 import raf.sk_schedule.model.location.RoomProperties;
 import raf.sk_schedule.model.schedule.ScheduleSlot;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,6 +29,13 @@ public interface ScheduleManager {
      */
     void initialize(String startDate, String endDate);
 
+    /**
+     * Initialize the schedule with specific starting and ending dates.
+     *'
+     * @param startDate The date when the schedule's accounting period start.
+     * @param endDate   The date when the schedule's accounting period ends.
+     */
+    void initialize(Date startDate, Date endDate);
 
     /**
      * Load room properties from a CSV file specified by csvPath and add them to the schedule.
@@ -115,7 +123,7 @@ public interface ScheduleManager {
      */
     boolean scheduleRepetitiveTimeSlot(String startTime, long duration, String schedulingIntervalStart, String schedulingIntervalEnd);
 
-    boolean scheduleRepetitiveTimeSlot(RepetitiveScheduleSlot recurrenceInterval);
+    boolean scheduleRepetitiveTimeSlot(RepetitiveScheduleMapper recurrenceInterval);
 
 
     /**

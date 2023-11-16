@@ -1,7 +1,6 @@
 package raf.sk_schedule.api;
 
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.model.schedule.ScheduleSlot;
 
 
 import java.text.ParseException;
@@ -14,9 +13,7 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
 
     protected Date startingDate;
     protected Date endingDate;
-
     protected SimpleDateFormat dateFormat;
-
     protected SimpleDateFormat dateTimeFormat;
 
 
@@ -27,7 +24,13 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
 
     @Override
     public void initialize(String startDate, String endDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        this.startingDate = parseDate(startDate);
+        this.endingDate = parseDate(endDate);
+
+    }
+
+    @Override
+    public void initialize(Date startDate, Date endDate) {
 
     }
 

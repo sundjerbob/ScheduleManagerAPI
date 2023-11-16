@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class RepetitiveScheduleSlot {
+public class RepetitiveScheduleMapper {
     private Date recurrenceIntervalStart;
     private Date recurrenceIntervalEnd;
     private int recurrencePeriod;
@@ -16,7 +16,7 @@ public class RepetitiveScheduleSlot {
     private int duration;
     private WeekDay weekDay;
 
-    private RepetitiveScheduleSlot(
+    private RepetitiveScheduleMapper(
             Date recurrenceIntervalStart,
             Date recurrenceIntervalEnd,
             int period,
@@ -117,8 +117,8 @@ public class RepetitiveScheduleSlot {
             return this;
         }
 
-        public RepetitiveScheduleSlot build() {
-            return new RepetitiveScheduleSlot(recurrenceIntervalStart, recurrenceIntervalEnd, recurrencePeriod, weekDay);
+        public RepetitiveScheduleMapper build() {
+            return new RepetitiveScheduleMapper(recurrenceIntervalStart, recurrenceIntervalEnd, recurrencePeriod, weekDay);
         }
     }
 

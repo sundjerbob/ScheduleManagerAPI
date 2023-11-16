@@ -1,7 +1,7 @@
 package raf.sk_schedule.api;
 
 /**
- * @apiNote the class should not be instanced nor extended.
+ * @apiNote This class should not be instanced nor extended.
  * Its purpose is to hold all top-level constants that are used by schedule api,
  * and can be accessed (is visible) outside the component.
  * Since there is no "sealed" keyword like in c#, we made constructor private.
