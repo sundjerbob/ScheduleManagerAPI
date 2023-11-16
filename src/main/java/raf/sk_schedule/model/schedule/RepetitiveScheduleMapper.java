@@ -9,10 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 public class RepetitiveScheduleMapper {
+
+    //default difference between linked slots is 7 days, meaning weekly occurrence
+    private static int DEFAULT_RECCURRENCE_PERIOD = 7;
     private Date recurrenceIntervalStart;
     private Date recurrenceIntervalEnd;
     private int recurrencePeriod;
-
     private String startTime;
     private String endTime;
     private int duration;
@@ -20,6 +22,7 @@ public class RepetitiveScheduleMapper {
 
 
     List<ScheduleSlot> slotInstances;
+
     private RepetitiveScheduleMapper(
             Date recurrenceIntervalStart,
             Date recurrenceIntervalEnd,
@@ -39,28 +42,47 @@ public class RepetitiveScheduleMapper {
     }
 
 
-    private List<Date> weekDayOccurrences(WeekDay day) {
+    private List<Date> mapSlotReoccurrences() {
 
-        long startTime = recurrenceIntervalStart.getTime();
-        long endTime = recurrenceIntervalEnd.getTime();
         Calendar calendar = Calendar.getInstance();
-        List<Date> occurrences = new ArrayList<>();
-        for (long time = startTime; time < endTime; time += 24 * 60 * 1000) {
-            Date date = new Date(time);
-            calendar.setTime(date);
+        List<Date> slotOccurrences = new ArrayList<>();
+        long oneDayMills = /*|mills in sec|*/1000 * /*|sec in min|*/60 * /*|min in hr|*/60 * /*|hr in day|*/24;
 
-            if (WeekDay.values()[calendar.get(Calendar.DAY_OF_WEEK) - 1] == day)
-                occurrences.add(date);
+        if (weekDay != null) {
+            //find the first occurrence of the weekDay from the beginning of the reoccurrences interval
+            for (long time = recurrenceIntervalStart.getTime(); time < recurrenceIntervalEnd.getTime(); time += oneDayMills) {
+                Date date = new Date(time);
+                calendar.setTime(date);
 
+                if (WeekDay.values()[calendar.get(Calendar.DAY_OF_WEEK) - 1] == this.weekDay) {
+                    slotOccurrences.add(date);
+                    break;
+                }
+            }
+        } else
+            slotOccurrences.add(recurrenceIntervalStart);
+
+        //slotOccurrences should have one element by this time...
+        if (slotOccurrences.isEmpty())
+            throw new RuntimeException(" 0,o' ?*#$");
+
+        // time difference between each linked slot is number of days (recurrencePeriod) * how many mills there is in one day
+        long deltaTimeMills = recurrencePeriod > 0 ? (long) recurrencePeriod * oneDayMills : DEFAULT_RECCURRENCE_PERIOD;
+
+        // finding all the slot occurrences starting from the first occurrence since we already had found that
+        for (long time = slotOccurrences.get(0).getTime(); time < this.recurrenceIntervalEnd.getTime(); time += deltaTimeMills) {
+            slotOccurrences.add(new Date(time));
         }
-        return occurrences;
+
+        return slotOccurrences;
     }
+
 
     public List<ScheduleSlot> mapSchedule() {
 
         long deltaPeriod = ((long) recurrencePeriod) * 1000 * 60 * 24;
 
-//        long start = weekDay == null ? recurrenceIntervalStart.getTime() : weekDayOccurrences(weekDay)[0];
+        // long start = weekDay == null ? recurrenceIntervalStart.getTime() : weekDayOccurrences(weekDay)[0];
         long end = recurrenceIntervalEnd.getTime();
 
         /*for (long time = start; time < end; time += deltaPeriod) {
