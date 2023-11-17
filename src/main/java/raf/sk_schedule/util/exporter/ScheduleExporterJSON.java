@@ -4,14 +4,48 @@ import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.model.location.RoomProperties;
 import raf.sk_schedule.model.schedule.ScheduleSlot;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * The `ScheduleExporterJSON` class provides utility methods for exporting schedule data to JSON format.
+ * It allows you to convert `ScheduleSlot`, `RoomProperties`, and other objects to JSON-formatted strings.
+ */
 public class ScheduleExporterJSON {
 
+    /**
+     * Serializes an object to its JSON representation.
+     *
+     * @param value The object to be serialized.
+     * @return A JSON-formatted string representing the provided object.
+     * @throws ScheduleException If the serialization of the object is not supported.
+     */
+    public static String serializeObject(Object value) {
+        if (value == null)
+            return "null";
+        else if (value instanceof String)
+            return "\"" + value + "\"";
+        else if (value instanceof Number || value instanceof Boolean)
+            return value.toString();
+        else if (value instanceof Map<?, ?>)
+            return mapToJSON((Map<?, ?>) value);
+        else if (value instanceof List<?>)
+            return listToJSON((List<?>) value);
+        else if (value instanceof RoomProperties)
+            return roomToJSON((RoomProperties) value);
+        else if (value instanceof ScheduleSlot)
+            return slotToJSON((ScheduleSlot) value);
+        else
+            throw new ScheduleException("Serialization of object of class: \"" + value.getClass() + "\" is not supported within schedule component!");
+    }
 
+
+    /**
+     * Converts a list of objects to a JSON-formatted string.
+     *
+     * @param objects The list of objects to be converted.
+     * @return A JSON-formatted string representing the provided list of objects.
+     */
     public static String listToJSON(List<?> objects) {
 
         if (objects == null)
@@ -33,6 +67,12 @@ public class ScheduleExporterJSON {
 
     }
 
+    /**
+     * Converts a `ScheduleSlot` instance to a JSON-formatted string.
+     *
+     * @param slot The `ScheduleSlot` instance to be converted.
+     * @return A JSON-formatted string representing the provided `ScheduleSlot`.
+     */
     public static String slotToJSON(ScheduleSlot slot) {
         return "{ " +
                 "\"startTime\": " + serializeObject(slot.getStartTime()) + "," +
@@ -44,25 +84,12 @@ public class ScheduleExporterJSON {
     }
 
 
-    public static String serializeObject(Object value) {
-        if (value == null)
-            return "null";
-        else if (value instanceof String)
-            return "\"" + value + "\"";
-        else if (value instanceof Number || value instanceof Boolean)
-            return value.toString();
-        else if (value instanceof Map<?, ?>)
-            return mapToJSON((Map<?, ?>) value);
-        else if (value instanceof List<?>)
-            return listToJSON((List<?>) value);
-        else if (value instanceof RoomProperties)
-            return roomToJSON((RoomProperties) value);
-        else if (value instanceof ScheduleSlot)
-            return slotToJSON((ScheduleSlot) value);
-        else
-            throw new ScheduleException("Serialization of object of class: \"" + value.getClass() + "\" is not supported within schedule component!");
-    }
-
+    /**
+     * Converts a `RoomProperties` instance to a JSON-formatted string.
+     *
+     * @param room The `RoomProperties` instance to be converted.
+     * @return A JSON-formatted string representing the provided `RoomProperties`.
+     */
     public static String roomToJSON(RoomProperties room) {
         return "{ " +
                 "\"name\":" + serializeObject(room.getName()) + "," +
@@ -73,6 +100,12 @@ public class ScheduleExporterJSON {
                 "}";
     }
 
+    /**
+     * Converts a map to a JSON-formatted string.
+     *
+     * @param map The map to be converted.
+     * @return A JSON-formatted string representing the provided map.
+     */
     public static String mapToJSON(Map<?, ?> map) {
         StringBuilder result = new StringBuilder("{ ");
         for (Map.Entry<?, ?> entry : map.entrySet()) {

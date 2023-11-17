@@ -1,6 +1,6 @@
 package raf.sk_schedule.exception;
 
-public class ScheduleIOException extends RuntimeException{
+public class ScheduleIOException extends RuntimeException {
     public ScheduleIOException(String message)
     {
         super(message);

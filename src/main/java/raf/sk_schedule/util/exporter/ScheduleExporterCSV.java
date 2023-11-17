@@ -6,9 +6,21 @@ import raf.sk_schedule.model.schedule.ScheduleSlot;
 import java.text.ParseException;
 import java.util.List;
 
-
+/**
+ * The `ScheduleExporterCSV` class provides utility methods for exporting schedule data to CSV format.
+ * It allows you to convert `ScheduleSlot` instances and lists of such instances to CSV format.
+ */
 public class ScheduleExporterCSV {
 
+
+    /**
+     * Converts a single `ScheduleSlot` instance to a CSV-formatted string.
+     *
+     * @param slot               The `ScheduleSlot` instance to be converted.
+     * @param includedAttributes Optional additional attributes to include in the CSV string.
+     * @return A CSV-formatted string representing the provided `ScheduleSlot`.
+     * @throws ParseException If there is an issue parsing date and time information.
+     */
     public static String slotToCSV(ScheduleSlot slot, String... includedAttributes) throws ParseException {
 
         StringBuilder csvSlot = new StringBuilder();
@@ -24,6 +36,15 @@ public class ScheduleExporterCSV {
 
     }
 
+    /**
+     * Converts a list of `ScheduleSlot` instances to a CSV-formatted string.
+     *
+     * @param list               The list of `ScheduleSlot` instances to be converted.
+     * @param includedAttributes Optional additional attributes to include in the CSV string.
+     * @return A CSV-formatted string representing the provided list of `ScheduleSlot` instances.
+     * @throws ParseException If there is an issue parsing date and time information.
+     * @throws ScheduleException If the list is empty or contains elements that are not `ScheduleSlot` instances.
+     */
     public static String listToCSV(List<?> list, String... includedAttributes) throws ParseException {
 
         StringBuilder csv = new StringBuilder("start, end, location, ");

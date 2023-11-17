@@ -8,9 +8,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Utility class for handling file operations related to the scheduling component.
+ */
 public class ScheduleFileWriter {
 
 
+    /**
+     * Creates a new file if it does not already exist.
+     *
+     * @param filePath The path of the file to be created.
+     * @return The File object representing the created or existing file.
+     * @throws ScheduleException   If there is an issue creating the file.
+     * @throws ScheduleIOException If an I/O error occurs while creating the file.
+     */
     public static File createFileIfNotExists(String filePath) {
         File file = new File(filePath);
         System.out.println(filePath);
@@ -21,21 +32,22 @@ public class ScheduleFileWriter {
             try {
                 // Create a new file in the same directory with the extracted name
                 File newFile = new File(file.getParent(), fileName);
-
-                if (newFile.createNewFile()) {
-                    System.out.println("File created: " + newFile.getAbsolutePath());
+                if (newFile.createNewFile())
                     return newFile; // Return the newly created File object
-                } else {
-                    throw new ScheduleException("Failed to create the file.");
-                }
             } catch (IOException e) {
-                throw new ScheduleIOException( "An error occurred: " + e.getMessage());
+                throw new ScheduleIOException(e);
             }
         }
 
         return file; // If the file already exists, return the existing File object
     }
 
+    /**
+     * Writes a string content to a file.
+     *
+     * @param file    The File object representing the target file.
+     * @param content The string content to be written to the file.
+     */
     public static void writeStringToFile(File file, String content) {
         try {
             FileWriter fileWriter = new FileWriter(file, true); // 'true' enables append mode
@@ -44,7 +56,7 @@ public class ScheduleFileWriter {
             writer.newLine(); // Add a newline character after the content
             writer.close();
         } catch (IOException e) {
-            System.err.println("An error occurred while writing to the file: " + e.getMessage());
+            throw new ScheduleIOException(e);
         }
     }
 }

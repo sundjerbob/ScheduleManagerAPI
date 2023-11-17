@@ -109,7 +109,7 @@ public class ScheduleImporter {
     }
 
     /**
-     * Imports room data from a CSV file and constructs a map of room names to `RoomProperties` instances.
+     * Imports room data from a CSV file and constructs a map of room names to respective `RoomProperties` instances.
      *
      * @param csvPath The path to the CSV file containing room data.
      * @return A map of room names to `RoomProperties` instances.

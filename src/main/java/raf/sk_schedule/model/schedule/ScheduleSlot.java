@@ -5,15 +5,13 @@ import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.model.location.RoomProperties;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static raf.sk_schedule.api.Constants.DATE_FORMAT;
-import static raf.sk_schedule.api.Constants.DATE_TIME_FORMAT;
 import static raf.sk_schedule.util.exporter.ScheduleExporterJSON.serializeObject;
+import static raf.sk_schedule.util.format.DateTimeFormatter.*;
 
 /**
  * This class represents a universal time slot within the scheduling component.
@@ -59,58 +57,45 @@ public class ScheduleSlot {
 
         this.startTime = startTime;
 
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            if (duration > 0) {
-                if (endTime == null) {
+        if (duration > 0) {
+            if (endTime == null) {
 
-                    this.endTime =
-                            dateTimeFormat.format(
-                                    new Date(
-                                            dateTimeFormat.parse(
-                                                    dateFormat.format(date) + " " + startTime).getTime()
-                                                    + (long) duration * 1000 * 60
-                                    )
-                            );
+                this.endTime =
+                        formatTime(
+                                new Date(
+                                        parseDateTime(
+                                                formatDateTime(date) + " " + startTime).getTime()
+                                                + (long) duration * 1000 * 60
+                                )
+                        );
 
-                } else {
-                    long startTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + this.startTime).getTime();
-                    long endTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + endTime).getTime();
-                    if (duration == (int) (endTimeMills - startTimeMills / (1000 * 60))) {
-                        this.duration = duration;
-                        this.endTime = endTime;
-                    } else
-                        throw new ScheduleException(
-                                "End time and duration does not match. Based of off end time the calculated duration would be "
-                                        + (int) (endTimeMills - startTimeMills / (1000 * 60)) + " minutes.");
+            } else {
+                long startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
+                long endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
+                if (duration == (int) (endTimeMills - startTimeMills / (1000 * 60))) {
+                    this.duration = duration;
+                    this.endTime = endTime;
+                } else
+                    throw new ScheduleException(
+                            "End time and duration does not match. Based of off end time the calculated duration would be "
+                                    + (int) (endTimeMills - startTimeMills / (1000 * 60)) + " minutes.");
 
-                }
-            } else if (endTime != null) {
-                this.endTime = endTime;
-                long startTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + this.startTime).getTime();
-                long endTimeMills = dateTimeFormat.parse(dateFormat.format(date) + " " + endTime).getTime();
-                this.duration = (int) (endTimeMills - startTimeMills / (1000 * 60));
+            }
+        } else if (endTime != null) {
+            this.endTime = endTime;
+            long startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
+            long endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
+            this.duration = (int) (endTimeMills - startTimeMills / (1000 * 60));
+        } else
+            throw new ScheduleException("End time and duration are both not defined thus the be occupied time couldn't be calculated!");
 
 
-            } else
-                throw new ScheduleException("End time and duration are both not defined thus the be occupied time couldn't be calculated!");
-        } catch (ParseException e) {
-            throw new ScheduleException("Date parsing error, check date and time string formats!");
-
-        }
         this.location = location;
         this.attributes = attributes;
     }
 
     public long getStartTimeInMillis() {
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            return dateTimeFormat.parse(dateFormat.format(this.date) + " " + startTime).getTime();
-        } catch (ParseException e) {
-            throw new ScheduleException(e);
-        }
+        return parseDateTime(formatDateTime(this.date) + " " + startTime).getTime();
     }
 
     public long getEndTimeInMillis() {
@@ -140,7 +125,6 @@ public class ScheduleSlot {
         //  2.start >= 1.start >= 2.end >= 1.end // { [\\\\} ]
 
         return (start_1 <= start_2 && start_2 < end_1) || (start_2 <= start_1 && start_1 < end_2);
-
     }
 
 
@@ -150,14 +134,34 @@ public class ScheduleSlot {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+        updateDuration();
     }
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+        updateDuration();
     }
 
+    /**
+     * Since the duration value is dependent to changes in startTime and endTime field it is recalculated dynamically,
+     * according to changes in time fields.
+     */
+    public void updateDuration() {
+        long intervalStart = parseDateTime(formatDate(this.date) + " " + this.startTime).getTime();
+        long intervalEnd = parseDateTime(formatDate(this.date) + " " + this.endTime).getTime();
+        if (intervalStart > intervalEnd)
+            throw new ScheduleException("The start time of a repetitive schedule mapper can not be after ending time!");
+        this.duration = (int) ((intervalEnd - intervalStart) / (1000 * 60));
+    }
+
+    /**
+     * When the duration is set to new value the end time gets recalculated based on that new value,
+     * and start time remains unchanged
+     */
     public void setDuration(int duration) {
         this.duration = duration;
+        long intervalStart = parseDateTime(formatDate(this.date) + " " + this.startTime).getTime();
+        endTime = formatTime(new Date(this.date.getTime() + (long) duration * 1000 * 60));
     }
 
     public void setLocation(RoomProperties location) {
@@ -225,7 +229,7 @@ public class ScheduleSlot {
         String endTime;
         private int duration;
         private RoomProperties location;
-        private final Map<String, Object> attributes;
+        private Map<String, Object> attributes;
 
         public Builder() {
             date = null;
@@ -236,8 +240,9 @@ public class ScheduleSlot {
             attributes = new HashMap<>();
         }
 
-        public void setDate(Date date) {
+        public Builder setDate(Date date) {
             this.date = date;
+            return this;
         }
 
         public Builder setStartTime(String startTime) {
@@ -265,6 +270,11 @@ public class ScheduleSlot {
 
         public Builder setAttribute(String attributeName, Object attributeValue) {
             attributes.put(attributeName, attributeValue);
+            return this;
+        }
+
+        public Builder setAttributes(Map<String, Object> attributes) {
+            this.attributes = attributes;
             return this;
         }
 
