@@ -1,5 +1,6 @@
 package raf.sk_schedule.util.importer;
 
+import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.exception.ScheduleIOException;
 import raf.sk_schedule.model.location.RoomProperties;
 import raf.sk_schedule.model.schedule.ScheduleSlot;
@@ -56,10 +57,13 @@ public class ScheduleImporter {
             }
         }
 
-
         // check if there is any mandatory column missing
         if (startIndex == -1 || locationIndex == -1 || (durationIndex == -1 && endIndex == -1)) {
-            throw new ScheduleIOException("Missing required columns in the CSV file.");
+            throw new ScheduleIOException("Missing required columns in the CSV file.\nColumns that are missing are:"
+                    + (startIndex == -1 ? " 'start' " : "")
+                    + (locationIndex == -1 ? " 'location' " : "")
+                    + (startIndex == -1 ? " 'start' " : "")
+                    + (durationIndex == -1 && endIndex == -1 ? " 'duration' or 'end' " : "."));
         }
 
 

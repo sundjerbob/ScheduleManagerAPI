@@ -26,27 +26,29 @@ public class ScheduleSlot {
     /**
      * Time of the day when the time slot starts.
      */
-    protected String startTime;
+    private String startTime;
 
     /**
      * Time of the day when the time slot ends.
      */
-    protected String endTime;
+    private String endTime;
 
     /**
      * Duration of the time slot in minutes.
      */
-    protected int duration;
+    private int duration;
 
     /**
      * Location (room) where the time slot is scheduled.
      */
-    protected RoomProperties location;
+    private RoomProperties location;
 
     /**
      * Additional attributes associated with the time slot.
      */
-    protected Map<String, Object> attributes;
+    private Map<String, Object> attributes;
+
+    private RepetitiveScheduleMapper sharedState;
 
 
     private ScheduleSlot(Date date, String startTime, String endTime, int duration, RoomProperties location, Map<String, Object> attributes) {
@@ -72,20 +74,20 @@ public class ScheduleSlot {
             } else {
                 long startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
                 long endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
-                if (duration == (int) (endTimeMills - startTimeMills / (1000 * 60))) {
+                if (duration == (int) (endTimeMills - startTimeMills / (1000 * 60  /*|mills in minute|*/))) {
                     this.duration = duration;
                     this.endTime = endTime;
                 } else
                     throw new ScheduleException(
                             "End time and duration does not match. Based of off end time the calculated duration would be "
-                                    + (int) (endTimeMills - startTimeMills / (1000 * 60)) + " minutes.");
+                                    + (int) (endTimeMills - startTimeMills / (1000 * 60  /*|mills in minute|*/)) + " minutes.");
 
             }
         } else if (endTime != null) {
             this.endTime = endTime;
             long startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
             long endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
-            this.duration = (int) (endTimeMills - startTimeMills / (1000 * 60));
+            this.duration = (int) (endTimeMills - startTimeMills / (1000 * 60  /*|mills in minute|*/));
         } else
             throw new ScheduleException("End time and duration are both not defined thus the be occupied time couldn't be calculated!");
 
@@ -128,6 +130,29 @@ public class ScheduleSlot {
     }
 
 
+    public ScheduleSlot listenToStatePropagation(RepetitiveScheduleMapper sharedState) {
+        this.sharedState = sharedState;
+        this.sharedState.addLinkedSlot(this);
+        return this;
+    }
+
+    public void handleStatePropagation() {
+        if (this.startTime.equals(sharedState.getStartTime()))
+            this.startTime = sharedState.getStartTime();
+        if (this.endTime.equals(sharedState.getEndTime()))
+            this.endTime = sharedState.getEndTime();
+        if (this.duration != sharedState.getDuration())
+            this.duration = sharedState.getDuration();
+        if (this.location == sharedState.getLocation())
+            this.location = sharedState.getLocation();
+
+        //looping through the shared states attributes map to find out if this slot has "dirty" attributes and if so updating it
+        for (Map.Entry<String, ?> sharedKeyVal : sharedState.getAttributes().entrySet()) {
+            if (attributes.containsKey(sharedKeyVal.getKey()) || attributes.get(sharedKeyVal.getKey()).equals(sharedKeyVal.getValue()))
+                attributes.put(sharedKeyVal.getKey(), sharedKeyVal.getValue());
+        }
+    }
+
     public void setDate(Date date) {
         this.date = date;
     }
@@ -150,13 +175,13 @@ public class ScheduleSlot {
         long intervalStart = parseDateTime(formatDate(this.date) + " " + this.startTime).getTime();
         long intervalEnd = parseDateTime(formatDate(this.date) + " " + this.endTime).getTime();
         if (intervalStart > intervalEnd)
-            throw new ScheduleException("The start time of a repetitive schedule mapper can not be after ending time!");
-        this.duration = (int) ((intervalEnd - intervalStart) / (1000 * 60));
+            throw new ScheduleException("The start time of a schedule slot can not be after ending time!");
+        this.duration = (int) ((intervalEnd - intervalStart) / (1000 * 60 /*|mills in minute|*/));
     }
 
     /**
      * When the duration is set to new value the end time gets recalculated based on that new value,
-     * and start time remains unchanged
+     * and start time remains unchanged.
      */
     public void setDuration(int duration) {
         this.duration = duration;

@@ -6,6 +6,8 @@ import raf.sk_schedule.model.location.RoomProperties;
 
 import java.util.*;
 
+import static raf.sk_schedule.util.format.DateTimeFormatter.parseDate;
+
 /**
  * The `RepetitiveScheduleMapper` class is responsible for creating a set of linked `ScheduleSlot` instances
  * with shared attributes but different time occurrences based on recurrence settings.
@@ -14,7 +16,7 @@ import java.util.*;
 public class RepetitiveScheduleMapper {
 
     // Default difference between linked slots is 7 days, meaning weekly occurrence
-    private static final int DEFAULT_RECURRENCE_PERIOD = 7;
+    public static final int DEFAULT_RECURRENCE_PERIOD = WeekDay.values().length;
 
     // Fields defining the recurrence settings
     private Date recurrenceIntervalStart;
@@ -30,7 +32,7 @@ public class RepetitiveScheduleMapper {
     private Map<String, Object> attributes;
 
     // List to hold all linked slots with shared attributes
-    List<ScheduleSlot> sharedSlotInstances;
+    private List<ScheduleSlot> linkedSlotInstances;
 
     // Private constructor to enforce the use of the Builder pattern
     private RepetitiveScheduleMapper(
@@ -53,7 +55,8 @@ public class RepetitiveScheduleMapper {
 
     /**
      * Maps the time occurrences of linked slots based on recurrence settings.
-     * The mapped time instances are structured as a java util Date object from witch the time related data can be easaly
+     * The mapped time instances are structured as a list of java util Date objects,
+     * from witch the time related data can be easily extracted.
      *
      * @return A list of dates representing the time occurrences of linked slots.
      */
@@ -116,11 +119,22 @@ public class RepetitiveScheduleMapper {
                     .build());
         }
 
-        // Set the value of the sharedSlotInstances field as the list of mapped slots
-        sharedSlotInstances = mappedSchedule;
+        // Set the value of the linkedSlotInstances field as the list of mapped slots
+        linkedSlotInstances = mappedSchedule;
 
-        return sharedSlotInstances;
+        return linkedSlotInstances;
     }
+
+    private void syncSharedState() {
+        for(ScheduleSlot linkedSLot: linkedSlotInstances) {
+
+        }
+    }
+
+    public void addLinkedSlot(ScheduleSlot linkedSlot) {
+        linkedSlotInstances.add(linkedSlot);
+    }
+
 
 
 
@@ -141,6 +155,92 @@ public class RepetitiveScheduleMapper {
         return weekDay;
     }
 
+
+    // Setters for recurrence settings
+    public void setRecurrenceIntervalStart(Date intervalEnd) {
+        recurrenceIntervalStart = intervalEnd;
+    }
+
+    public void setRecurrenceIntervalEnd(Date intervalEnd) {
+        recurrenceIntervalEnd = intervalEnd;
+    }
+
+    public void setRecurrenceIntervalStart(String intervalStart) {
+        recurrenceIntervalStart = parseDate(intervalStart);
+    }
+
+    public void setRecurrenceIntervalEnd(String intervalEnd) {
+        recurrenceIntervalStart = parseDate(intervalEnd);
+    }
+
+    public void setRecurrencePeriod(int recurrencePeriod) {
+        this.recurrencePeriod = recurrencePeriod;
+    }
+
+    public void setWeekDay(WeekDay weekDay) {
+        this.weekDay = weekDay;
+    }
+
+    public void setWeekDay(String weekDay) {
+        this.weekDay = Enum.valueOf(WeekDay.class, weekDay);
+    }
+
+
+    // Getters for fields that are shared fields values among the all mapped slots
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public RoomProperties getLocation() {
+        return location;
+    }
+
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    public Object getAttribute(String attributeName) {
+        return attributes.get(attributeName);
+    }
+
+    public boolean hasAttribute(String attributeName) {
+        return attributes.containsKey(attributeName);
+    }
+
+    // Getters for fields that are shared fields values among the all mapped slots
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setLocation(RoomProperties location) {
+        this.location = location;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public void setAttributes(Map<String, Object> attributes) {
+        this.attributes = attributes;
+    }
+
+    public void setAttribute(String attributeName, String attributeValue) {
+        attributes.put(attributeName, attributeValue);
+    }
+
+
     /**
      * The `Builder` class is responsible for constructing instances of the `RepetitiveScheduleMapper` class
      * with the desired settings.
@@ -160,7 +260,7 @@ public class RepetitiveScheduleMapper {
         public Builder() {
             recurrenceIntervalStart = null;
             recurrenceIntervalEnd = null;
-            recurrencePeriod = 7; // Default delta is weekly or every 7 days
+            recurrencePeriod = DEFAULT_RECURRENCE_PERIOD; // Default delta is weekly or every 7 days
             startTime = null;
             endTime = null;
             duration = 0;
