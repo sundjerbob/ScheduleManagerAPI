@@ -17,7 +17,7 @@ public class RoomProperties {
     private boolean hasComputers;
     private boolean hasProjector;
 
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     private RoomProperties(String name, int capacity, boolean hasComputers, boolean hasProjector, Map<String, Object> attributes) {
         this.name = name;
@@ -32,19 +32,28 @@ public class RoomProperties {
         return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + serializeObject(attributes);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof RoomProperties)
+            return ((RoomProperties) obj).name.equals(name);
+        if (obj instanceof String)
+            return obj.equals(name);
+        return false;
+    }
+
     public static class Builder {
         private String name;
         private int capacity;
         private boolean hasComputers;
         private boolean hasProjector;
-        private Map<String, Object> extra;
+        private final Map<String, Object> attributes;
 
         public Builder() {
             // Set default values or customize them as needed
             capacity = 0;
             hasComputers = false;
             hasProjector = false;
-            extra = new HashMap<>();
+            attributes = new HashMap<>();
         }
 
         public Builder setName(String name) {
@@ -67,9 +76,9 @@ public class RoomProperties {
             return this;
         }
 
-        public Builder addExtra(String attributeName, Object attributeValue) {
+        public Builder setAttribute(String attributeName, Object attributeValue) {
 
-            this.extra.put(attributeName, attributeValue);
+            this.attributes.put(attributeName, attributeValue);
             return this;
         }
 
@@ -78,7 +87,7 @@ public class RoomProperties {
             if (name == null || name.isEmpty())
                 throw new ScheduleException("Room description has to have a name.");
 
-            return new RoomProperties(name, capacity, hasComputers, hasProjector, extra);
+            return new RoomProperties(name, capacity, hasComputers, hasProjector, attributes);
         }
     }
 

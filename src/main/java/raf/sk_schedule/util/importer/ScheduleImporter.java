@@ -1,6 +1,5 @@
 package raf.sk_schedule.util.importer;
 
-import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.exception.ScheduleIOException;
 import raf.sk_schedule.model.location.RoomProperties;
 import raf.sk_schedule.model.schedule.ScheduleSlot;
@@ -170,7 +169,7 @@ public class ScheduleImporter {
             for (int i = 0; i < columnNames.length; i++) {
                 if (i != nameIndex && i != capacityIndex && i != hasComputersIndex && i != hasProjectorIndex) {
                     // This column is an extra attribute
-                    roomBuilder.addExtra(columnNames[i].trim(), values[i].trim());
+                    roomBuilder.setAttribute(columnNames[i].trim(), values[i].trim());
                 }
             }
 

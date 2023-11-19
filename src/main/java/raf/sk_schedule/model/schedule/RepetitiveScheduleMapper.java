@@ -126,16 +126,14 @@ public class RepetitiveScheduleMapper {
     }
 
     private void syncSharedState() {
-        for(ScheduleSlot linkedSLot: linkedSlotInstances) {
-
+        for (ScheduleSlot linkedSlot : linkedSlotInstances) {
+            linkedSlot.handleSharedStatePropagation();
         }
     }
 
     public void addLinkedSlot(ScheduleSlot linkedSlot) {
         linkedSlotInstances.add(linkedSlot);
     }
-
-
 
 
     // Getters for recurrence settings
@@ -215,29 +213,39 @@ public class RepetitiveScheduleMapper {
         return attributes.containsKey(attributeName);
     }
 
-    // Getters for fields that are shared fields values among the all mapped slots
+    // Setters for fields that are shared fields values among the all mapped slots
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+        syncSharedState();
     }
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+        syncSharedState();
     }
 
     public void setLocation(RoomProperties location) {
         this.location = location;
+        syncSharedState();
     }
 
     public void setDuration(int duration) {
         this.duration = duration;
+        syncSharedState();
     }
 
     public void setAttributes(Map<String, Object> attributes) {
         this.attributes = attributes;
+        syncSharedState();
     }
 
     public void setAttribute(String attributeName, String attributeValue) {
         attributes.put(attributeName, attributeValue);
+        syncSharedState();
+    }
+
+    public void removeAttribute(String attributeName) {
+        attributes.remove(attributeName);
     }
 
 

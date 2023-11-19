@@ -116,7 +116,7 @@ public class ScheduleExporterJSON {
                     .append(",");
         }
         if (!map.isEmpty()) {
-            result.setLength(result.length() - 1); // Remove the trailing comma and \n
+            result.setLength(result.length() - 1); // Remove the trailing comma
         }
         result.append("}");
         return result.toString();

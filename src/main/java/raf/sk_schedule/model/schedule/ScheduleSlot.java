@@ -136,21 +136,31 @@ public class ScheduleSlot {
         return this;
     }
 
-    public void handleStatePropagation() {
+    public void handleSharedStatePropagation() {
+
         if (this.startTime.equals(sharedState.getStartTime()))
             this.startTime = sharedState.getStartTime();
+
         if (this.endTime.equals(sharedState.getEndTime()))
             this.endTime = sharedState.getEndTime();
+
         if (this.duration != sharedState.getDuration())
             this.duration = sharedState.getDuration();
+
         if (this.location == sharedState.getLocation())
             this.location = sharedState.getLocation();
 
-        //looping through the shared states attributes map to find out if this slot has "dirty" attributes and if so updating it
-        for (Map.Entry<String, ?> sharedKeyVal : sharedState.getAttributes().entrySet()) {
-            if (attributes.containsKey(sharedKeyVal.getKey()) || attributes.get(sharedKeyVal.getKey()).equals(sharedKeyVal.getValue()))
-                attributes.put(sharedKeyVal.getKey(), sharedKeyVal.getValue());
+        for (String attribute : attributes.keySet()) {
+            if (!sharedState.hasAttribute(attribute))
+                attributes.remove(attribute);
         }
+
+        //looping through the shared states attributes map to find out if this slot has "dirty" attributes and if so updating it
+        for (String sharedAttr : sharedState.getAttributes().keySet()) {
+            if (this.hasAttribute(sharedAttr) || this.getAttribute(sharedAttr).equals(sharedState.getAttribute(sharedAttr)))
+                this.setAttribute(sharedAttr, sharedState.getAttribute(sharedAttr));
+        }
+
     }
 
     public void setDate(Date date) {
@@ -171,7 +181,7 @@ public class ScheduleSlot {
      * Since the duration value is dependent to changes in startTime and endTime field it is recalculated dynamically,
      * according to changes in time fields.
      */
-    public void updateDuration() {
+    private void updateDuration() {
         long intervalStart = parseDateTime(formatDate(this.date) + " " + this.startTime).getTime();
         long intervalEnd = parseDateTime(formatDate(this.date) + " " + this.endTime).getTime();
         if (intervalStart > intervalEnd)
@@ -186,14 +196,14 @@ public class ScheduleSlot {
     public void setDuration(int duration) {
         this.duration = duration;
         long intervalStart = parseDateTime(formatDate(this.date) + " " + this.startTime).getTime();
-        endTime = formatTime(new Date(this.date.getTime() + (long) duration * 1000 * 60));
+        endTime = formatTime(new Date(this.date.getTime() + (long) duration * 1000 * 60 /*|mills in minute|*/));
     }
 
     public void setLocation(RoomProperties location) {
         this.location = location;
     }
 
-    public ScheduleSlot setAttribute(String attributeName, String attributeValue) {
+    public ScheduleSlot setAttribute(String attributeName, Object attributeValue) {
         attributes.put(attributeName, attributeValue);
         return this;
     }
