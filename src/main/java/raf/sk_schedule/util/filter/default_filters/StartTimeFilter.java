@@ -5,7 +5,7 @@ import raf.sk_schedule.util.filter.CriteriaFilter;
 import raf.sk_schedule.util.filter.SearchCriteria;
 import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
-import static raf.sk_schedule.util.formater.DateTimeFormatter.parseTime;
+import static raf.sk_schedule.util.date_formater.DateTimeFormatter.parseTime;
 
 
 /**

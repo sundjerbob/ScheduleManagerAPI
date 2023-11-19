@@ -7,7 +7,7 @@ import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
 import java.util.*;
 
-import static raf.sk_schedule.util.formater.DateTimeFormatter.parseDate;
+import static raf.sk_schedule.util.date_formater.DateTimeFormatter.parseDate;
 
 /**
  * The `RepetitiveScheduleMapper` class is responsible for creating a set of linked `ScheduleSlot` instances

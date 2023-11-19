@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import static raf.sk_schedule.api.Constants.*;
-import static raf.sk_schedule.util.formater.DateTimeFormatter.parseDate;
+import static raf.sk_schedule.util.date_formater.DateTimeFormatter.parseDate;
 
 public abstract class ScheduleManagerAdapter implements ScheduleManager {
 

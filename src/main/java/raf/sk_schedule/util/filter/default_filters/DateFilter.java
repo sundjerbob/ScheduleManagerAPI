@@ -7,7 +7,7 @@ import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
 import java.util.Date;
 
-import static raf.sk_schedule.util.formater.DateTimeFormatter.parseDate;
+import static raf.sk_schedule.util.date_formater.DateTimeFormatter.parseDate;
 
 /**
  * A default implementation of {@link CriteriaFilter} for filtering based on date criteria.

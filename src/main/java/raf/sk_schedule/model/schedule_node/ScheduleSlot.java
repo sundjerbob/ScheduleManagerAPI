@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static raf.sk_schedule.util.exporter.ScheduleExporterJSON.serializeObject;
-import static raf.sk_schedule.util.formater.DateTimeFormatter.*;
+import static raf.sk_schedule.util.date_formater.DateTimeFormatter.*;
 
 /**
  * This class represents a universal time slot within the scheduling component.

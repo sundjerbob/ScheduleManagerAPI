@@ -1,4 +1,4 @@
-package raf.sk_schedule.util.formater;
+package raf.sk_schedule.util.date_formater;
 
 import raf.sk_schedule.exception.ScheduleException;
 
@@ -53,15 +53,22 @@ public class DateTimeFormatter {
     }
 
     /**
-     * Parses a string into a Date object using the specified time format.
+     * Parses a string into a {@code Date} object representing the time using the specified time format.
+     * <p>
+     * Note: The returned {@code Date} object will be set to the date of 1st January 1970 if the parsed string contains only
+     * time information without an actual date. This behavior is due to the default parsing of {@code java.util.Date} when
+     * only the time of the day is provided without an explicit date. Therefore, it is recommended to use this method
+     * when dealing with scenarios where only the time of the day is relevant, and the comparison of times is needed as if
+     * they all belong to the same date (1st January 1970).
+     * </p>
      *
-     * @param date The string representing the time to be parsed.
-     * @return The parsed Date object.
+     * @param time The string representing the time to be parsed.
+     * @return The parsed {@code Date} object.
      * @throws ScheduleException If the time string is not in the expected format.
      */
-    public static Date parseTime(String date) {
+    public static Date parseTime(String time) {
         try {
-            return timeFormat.parse(date);
+            return timeFormat.parse(time);
         } catch (ParseException e) {
             throw new ScheduleException("The universal format for time within schedule component is: " + TIME_FORMAT + " !");
         }
