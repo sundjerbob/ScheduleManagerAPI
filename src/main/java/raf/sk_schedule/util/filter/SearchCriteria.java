@@ -10,6 +10,9 @@ import java.util.*;
 /**
  * The `SearchCriteria` class provides a flexible way to filter a list of `ScheduleSlot` instances based on various criteria.
  * Criteria can include date, day of the week, start time, end time, duration, location, and dynamic attributes.
+ * Users are encouraged to refer to the {@link CriteriaFilter} interface for predefined constants representing keys for default supported criteria.
+ *
+ * @see raf.sk_schedule.util.filter.CriteriaFilter
  */
 public class SearchCriteria {
 
@@ -17,7 +20,24 @@ public class SearchCriteria {
     // number of supported handles
     private static final int SUPPORTED_FILTERS = 9;
 
-    private Map<Integer, Object> searchCriteria;
+    /**
+     * The main structure for storing parameters used in filtering configurations.
+     * The keys used in this map are defined in the {@link CriteriaFilter} interface as constants.
+     * These constants represent the default supported criteria for filtering `ScheduleSlot` instances.
+     * Keys include:
+     * <ul>
+     *     <li>{@link CriteriaFilter#DATE_KEY}</li>
+     *     <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
+     *     <li>{@link CriteriaFilter#START_TIME_KEY}</li>
+     *     <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *     <li>{@link CriteriaFilter#DURATION_KEY}</li>
+     *     <li>{@link CriteriaFilter#LOCATION_KEY}</li>
+     *     <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
+     *     <li>{@link CriteriaFilter#UPPER_BOUND_DATE_KEY}</li>
+     *     <li>{@link CriteriaFilter#LOWER_BOUND_DATE_KEY}</li>
+     * </ul>
+     */
+    private final Map<Integer, Object> searchCriteria;
 
     private final CriteriaFilter[] supportedFilters;
 
@@ -29,9 +49,12 @@ public class SearchCriteria {
      */
     private SearchCriteria(Map<Integer, Object> searchCriteria) {
 
-
+        // store filter search params
         this.searchCriteria = searchCriteria;
+
+        // allocate default filters array
         supportedFilters = new CriteriaFilter[SUPPORTED_FILTERS];
+
         supportedFilters[CriteriaFilter.DATE_KEY] = new DateFilter();
         supportedFilters[CriteriaFilter.WEEK_DAY_KEY] = new WeekDayFilter();
         supportedFilters[CriteriaFilter.START_TIME_KEY] = new StartTimeFilter();
@@ -44,6 +67,12 @@ public class SearchCriteria {
     }
 
 
+    /**
+     * Filters a list of `ScheduleSlot` instances based on the set criteria.
+     *
+     * @param schedule The list of `ScheduleSlot` instances to be filtered.
+     * @return The filtered list of `ScheduleSlot` instances.
+     */
     public List<ScheduleSlot> filter(List<ScheduleSlot> schedule) {
         Iterator<ScheduleSlot> iterator = schedule.iterator();
         while (iterator.hasNext()) {
@@ -60,9 +89,10 @@ public class SearchCriteria {
 
 
     /**
-     * Filters a list of `ScheduleSlot` instances based on the set criteria.
+     * Filters a list of `ScheduleSlot` instances using a custom filter.
      *
-     * @param schedule The list of `ScheduleSlot` instances to be filtered.
+     * @param schedule     The list of `ScheduleSlot` instances to be filtered.
+     * @param customFilter The custom filter to be applied.
      * @return The filtered list of `ScheduleSlot` instances.
      */
     public List<ScheduleSlot> filter(List<ScheduleSlot> schedule, CriteriaFilter customFilter) {
@@ -75,7 +105,18 @@ public class SearchCriteria {
      * Checks if a specific criteria is set.
      *
      * @param criteriaKey The key representing the criteria.
-     * @return `true` if the criteria is set, otherwise `false`.
+     *                    The key values that are acceptable:
+     *                    <ul>
+     *                        <li>{@link CriteriaFilter#DATE_KEY}</li>
+     *                        <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
+     *                        <li>{@link CriteriaFilter#START_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#DURATION_KEY}</li>
+     *                        <li>{@link CriteriaFilter#LOCATION_KEY}</li>
+     *                        <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
+     *                        <li>{@link CriteriaFilter#UPPER_BOUND_DATE_KEY}</li>
+     *                        <li>{@link CriteriaFilter#LOWER_BOUND_DATE_KEY}</li>
+     *                    </ul>     * @return `true` if the criteria is set, otherwise `false`.
      */
     public boolean hasCriteria(int criteriaKey) {
         return searchCriteria.containsKey(criteriaKey);
@@ -85,6 +126,18 @@ public class SearchCriteria {
      * Gets the value of a specific criteria.
      *
      * @param criteriaKey The key representing the criteria.
+     *                    The key values that are acceptable:
+     *                    <ul>
+     *                        <li>{@link CriteriaFilter#DATE_KEY}</li>
+     *                        <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
+     *                        <li>{@link CriteriaFilter#START_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#DURATION_KEY}</li>
+     *                        <li>{@link CriteriaFilter#LOCATION_KEY}</li>
+     *                        <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
+     *                        <li>{@link CriteriaFilter#UPPER_BOUND_DATE_KEY}</li>
+     *                        <li>{@link CriteriaFilter#LOWER_BOUND_DATE_KEY}</li>
+     *                    </ul>
      * @return The value of the criteria.
      */
     public Object getCriteria(int criteriaKey) {
@@ -95,14 +148,34 @@ public class SearchCriteria {
      * Sets the value of a specific criteria.
      *
      * @param criteriaKey   The key representing the criteria.
+     *                      The key values that are acceptable:
+     *                      <ul>
+     *                          <li>{@link CriteriaFilter#DATE_KEY}</li>
+     *                          <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
+     *                          <li>{@link CriteriaFilter#START_TIME_KEY}</li>
+     *                          <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *                          <li>{@link CriteriaFilter#DURATION_KEY}</li>
+     *                          <li>{@link CriteriaFilter#LOCATION_KEY}</li>
+     *                          <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
+     *                          <li>{@link CriteriaFilter#UPPER_BOUND_DATE_KEY}</li>
+     *                          <li>{@link CriteriaFilter#LOWER_BOUND_DATE_KEY}</li>
+     *                      </ul>
      * @param criteriaValue The value to set for the criteria.
      */
     public void setCriteria(int criteriaKey, Object criteriaValue) {
         searchCriteria.put(criteriaKey, criteriaValue);
     }
 
+    public void removeCriteria(int criteriaKey) {
+        searchCriteria.remove(criteriaKey);
+    }
+
     /**
-     * Checks if a dynamic attribute with a specific name is set.
+     * Gets the value of a dynamic attribute with a specific name.
+     * This method is working with a Map object of dynamic attributes,
+     * alternatively you could do the same thing by getting Map object
+     * accessing {@link SearchCriteria#searchCriteria} using {@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY} as a key
+     * and then calling {@code  containsKey(attributeName)} that is defined in {@link java.util.Map}.
      *
      * @param attributeName The name of the dynamic attribute.
      * @return `true` if the dynamic attribute is set, otherwise `false`.
@@ -121,6 +194,10 @@ public class SearchCriteria {
 
     /**
      * Gets the value of a dynamic attribute with a specific name.
+     * This method is working with a Map object of dynamic attributes,
+     * alternatively you could do the same thing by getting Map object
+     * accessing {@link SearchCriteria#searchCriteria} using {@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY} as a key
+     * and then calling {@code  get(attributeName)} that is defined in {@link java.util.Map}.
      *
      * @param attributeName The name of the dynamic attribute.
      * @return The value of the dynamic attribute.

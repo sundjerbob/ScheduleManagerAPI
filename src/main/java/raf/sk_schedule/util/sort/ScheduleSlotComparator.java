@@ -9,6 +9,16 @@ import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 public interface ScheduleSlotComparator {
 
     /**
+     * Constant indicating ascending order for sorting.
+     */
+    int ASCENDING_ORDER = 1;
+
+    /**
+     * Constant indicating descending order for sorting.
+     */
+    int DESCENDING_ORDER = -1;
+
+    /**
      * Compares two ScheduleSlot instances based on custom sorting logic.
      *
      * @param slot1 The first ScheduleSlot to compare.
