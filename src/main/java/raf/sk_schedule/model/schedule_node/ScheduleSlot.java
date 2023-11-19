@@ -158,7 +158,7 @@ public class ScheduleSlot {
 
         //looping through the shared states attributes map to find out if this slot has "dirty" attributes and if so updating it
         for (String sharedAttr : sharedState.getAttributes().keySet()) {
-            if (this.hasAttribute(sharedAttr) || this.getAttribute(sharedAttr).equals(sharedState.getAttribute(sharedAttr)))
+            if (!this.hasAttribute(sharedAttr) || !this.getAttribute(sharedAttr).equals(sharedState.getAttribute(sharedAttr)))
                 this.setAttribute(sharedAttr, sharedState.getAttribute(sharedAttr));
         }
 
