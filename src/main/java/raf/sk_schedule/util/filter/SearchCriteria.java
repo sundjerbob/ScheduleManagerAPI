@@ -1,16 +1,11 @@
-package raf.sk_schedule.filter;
+package raf.sk_schedule.util.filter;
 
 
-import raf.sk_schedule.api.Constants.WeekDay;
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.filter.default_filters.*;
-import raf.sk_schedule.model.location.RoomProperties;
-import raf.sk_schedule.model.schedule.ScheduleSlot;
+import raf.sk_schedule.model.schedule_node.ScheduleSlot;
+import raf.sk_schedule.util.filter.default_filters.*;
 
 import java.util.*;
-
-import static raf.sk_schedule.filter.CriteriaFilter.*;
-import static raf.sk_schedule.util.format.DateTimeFormatter.*;
 
 /**
  * The `SearchCriteria` class provides a flexible way to filter a list of `ScheduleSlot` instances based on various criteria.
@@ -37,15 +32,15 @@ public class SearchCriteria {
 
         this.searchCriteria = searchCriteria;
         supportedFilters = new CriteriaFilter[SUPPORTED_FILTERS];
-        supportedFilters[DATE_KEY] = new DateFilter();
-        supportedFilters[WEEK_DAY_KEY] = new WeekDayFilter();
-        supportedFilters[START_TIME_KEY] = new StartTimeFilter();
-        supportedFilters[END_TIME_KEY] = new EndTimeFilter();
-        supportedFilters[DURATION_KEY] = new DurationFilter();
-        supportedFilters[LOCATION_KEY] = new LocationFilter();
-        supportedFilters[DYNAMIC_ATTRIBUTES_KEY] = new DynamicAttributesFilter();
-        supportedFilters[LOWER_BOUND_DATE_KEY] = new LowerBoundDateFilter();
-        supportedFilters[UPPER_BOUND_DATE_KEY] = new UpperBoundDateFilter();
+        supportedFilters[CriteriaFilter.DATE_KEY] = new DateFilter();
+        supportedFilters[CriteriaFilter.WEEK_DAY_KEY] = new WeekDayFilter();
+        supportedFilters[CriteriaFilter.START_TIME_KEY] = new StartTimeFilter();
+        supportedFilters[CriteriaFilter.END_TIME_KEY] = new EndTimeFilter();
+        supportedFilters[CriteriaFilter.DURATION_KEY] = new DurationFilter();
+        supportedFilters[CriteriaFilter.LOCATION_KEY] = new LocationFilter();
+        supportedFilters[CriteriaFilter.DYNAMIC_ATTRIBUTES_KEY] = new DynamicAttributesFilter();
+        supportedFilters[CriteriaFilter.LOWER_BOUND_DATE_KEY] = new LowerBoundDateFilter();
+        supportedFilters[CriteriaFilter.UPPER_BOUND_DATE_KEY] = new UpperBoundDateFilter();
     }
 
 
@@ -114,8 +109,8 @@ public class SearchCriteria {
      */
     public boolean hasDynamicAttribute(String attributeName) {
         try {
-            return searchCriteria.containsKey(DYNAMIC_ATTRIBUTES_KEY)
-                    && ((Map<?, ?>) searchCriteria.get(DYNAMIC_ATTRIBUTES_KEY)).containsKey(attributeName);
+            return searchCriteria.containsKey(CriteriaFilter.DYNAMIC_ATTRIBUTES_KEY)
+                    && ((Map<?, ?>) searchCriteria.get(CriteriaFilter.DYNAMIC_ATTRIBUTES_KEY)).containsKey(attributeName);
         } catch (ClassCastException e) {
             throw new ScheduleException(
                     e.getMessage()
@@ -132,8 +127,8 @@ public class SearchCriteria {
      */
     public Object getDynamicAttribute(String attributeName) {
         try {
-            if (searchCriteria.containsKey(DYNAMIC_ATTRIBUTES_KEY))
-                return ((Map<?, ?>) searchCriteria.get(DYNAMIC_ATTRIBUTES_KEY)).get(attributeName);
+            if (searchCriteria.containsKey(CriteriaFilter.DYNAMIC_ATTRIBUTES_KEY))
+                return ((Map<?, ?>) searchCriteria.get(CriteriaFilter.DYNAMIC_ATTRIBUTES_KEY)).get(attributeName);
 
             return null;
         } catch (ClassCastException e) {
@@ -173,7 +168,7 @@ public class SearchCriteria {
          * @return The builder instance.
          */
         public Builder setDynamicAttributes(Map<String, Object> attributes) {
-            searchCriteria.put(DYNAMIC_ATTRIBUTES_KEY, attributes);
+            searchCriteria.put(CriteriaFilter.DYNAMIC_ATTRIBUTES_KEY, attributes);
             return this;
         }
 

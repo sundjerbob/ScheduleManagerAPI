@@ -1,4 +1,4 @@
-package raf.sk_schedule.util.format;
+package raf.sk_schedule.util.formater;
 
 import raf.sk_schedule.exception.ScheduleException;
 

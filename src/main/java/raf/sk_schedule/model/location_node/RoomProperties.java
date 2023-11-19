@@ -1,4 +1,4 @@
-package raf.sk_schedule.model.location;
+package raf.sk_schedule.model.location_node;
 
 
 import raf.sk_schedule.exception.ScheduleException;

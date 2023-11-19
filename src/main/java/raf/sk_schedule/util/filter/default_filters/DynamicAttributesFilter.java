@@ -1,13 +1,25 @@
-package raf.sk_schedule.filter.default_filters;
+package raf.sk_schedule.util.filter.default_filters;
 
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.filter.CriteriaFilter;
-import raf.sk_schedule.filter.SearchCriteria;
-import raf.sk_schedule.model.schedule.ScheduleSlot;
+import raf.sk_schedule.util.filter.CriteriaFilter;
+import raf.sk_schedule.util.filter.SearchCriteria;
+import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
 import java.util.Map;
 
+/**
+ * A default implementation of {@link CriteriaFilter} for filtering based on dynamic attributes criteria.
+ */
 public class DynamicAttributesFilter implements CriteriaFilter {
+
+    /**
+     * Filters a schedule slot based on the specified dynamic attributes criteria.
+     *
+     * @param slot           The schedule slot to be filtered.
+     * @param searchCriteria The criteria used for filtering.
+     * @return True if the slot's attributes do not match the specified dynamic attributes criteria, false otherwise.
+     * @throws ScheduleException If the dynamic attributes search parameter is not a Map instance.
+     */
     @Override
     public boolean filter(ScheduleSlot slot, SearchCriteria searchCriteria) {
         // Implementation for dynamic attributes filter

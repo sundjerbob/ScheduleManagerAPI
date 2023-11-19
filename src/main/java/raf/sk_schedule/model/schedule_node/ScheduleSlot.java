@@ -1,8 +1,9 @@
-package raf.sk_schedule.model.schedule;
+package raf.sk_schedule.model.schedule_node;
 
 import raf.sk_schedule.api.Constants.WeekDay;
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.model.location.RoomProperties;
+import raf.sk_schedule.model.location_node.RoomProperties;
+import raf.sk_schedule.model.schedule_mapper.RepetitiveScheduleMapper;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static raf.sk_schedule.util.exporter.ScheduleExporterJSON.serializeObject;
-import static raf.sk_schedule.util.format.DateTimeFormatter.*;
+import static raf.sk_schedule.util.formater.DateTimeFormatter.*;
 
 /**
  * This class represents a universal time slot within the scheduling component.

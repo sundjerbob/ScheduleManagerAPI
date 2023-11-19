@@ -1,8 +1,8 @@
 package raf.sk_schedule.util.importer;
 
 import raf.sk_schedule.exception.ScheduleIOException;
-import raf.sk_schedule.model.location.RoomProperties;
-import raf.sk_schedule.model.schedule.ScheduleSlot;
+import raf.sk_schedule.model.location_node.RoomProperties;
+import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

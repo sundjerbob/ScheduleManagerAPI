@@ -1,8 +1,8 @@
 package raf.sk_schedule.util.exporter;
 
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.model.location.RoomProperties;
-import raf.sk_schedule.model.schedule.ScheduleSlot;
+import raf.sk_schedule.model.location_node.RoomProperties;
+import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
 import java.util.List;
 import java.util.Map;

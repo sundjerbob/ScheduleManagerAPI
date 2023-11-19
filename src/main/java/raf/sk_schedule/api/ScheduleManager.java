@@ -1,10 +1,10 @@
 package raf.sk_schedule.api;
 
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.filter.SearchCriteria;
-import raf.sk_schedule.model.schedule.RepetitiveScheduleMapper;
-import raf.sk_schedule.model.location.RoomProperties;
-import raf.sk_schedule.model.schedule.ScheduleSlot;
+import raf.sk_schedule.util.filter.SearchCriteria;
+import raf.sk_schedule.model.schedule_mapper.RepetitiveScheduleMapper;
+import raf.sk_schedule.model.location_node.RoomProperties;
+import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 import raf.sk_schedule.api.Constants.WeekDay;
 
 import java.io.IOException;

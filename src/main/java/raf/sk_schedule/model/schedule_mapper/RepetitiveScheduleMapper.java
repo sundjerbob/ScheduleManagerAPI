@@ -1,12 +1,13 @@
-package raf.sk_schedule.model.schedule;
+package raf.sk_schedule.model.schedule_mapper;
 
 import raf.sk_schedule.api.Constants.WeekDay;
 import raf.sk_schedule.exception.ScheduleException;
-import raf.sk_schedule.model.location.RoomProperties;
+import raf.sk_schedule.model.location_node.RoomProperties;
+import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
 import java.util.*;
 
-import static raf.sk_schedule.util.format.DateTimeFormatter.parseDate;
+import static raf.sk_schedule.util.formater.DateTimeFormatter.parseDate;
 
 /**
  * The `RepetitiveScheduleMapper` class is responsible for creating a set of linked `ScheduleSlot` instances

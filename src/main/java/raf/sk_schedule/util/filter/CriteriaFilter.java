@@ -1,15 +1,16 @@
-package raf.sk_schedule.filter;
+package raf.sk_schedule.util.filter;
 
-import raf.sk_schedule.model.schedule.ScheduleSlot;
+import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 
 
 /**
  * Functional interface for implementing custom filters.
  */
+@FunctionalInterface
 public interface CriteriaFilter {
 
     /**
-     * Constants representing keys for various criteria.
+     * Constants representing keys for default supported criteria.
      */
     int DATE_KEY = 0;
     int WEEK_DAY_KEY = 1;
