@@ -97,12 +97,12 @@ public class ScheduleSlot {
         this.attributes = attributes;
     }
 
-    public long getStartTimeInMillis() {
+    public long getAbsoluteStartTimeMillis() {
         return parseDateTime(formatDateTime(this.date) + " " + startTime).getTime();
     }
 
-    public long getEndTimeInMillis() {
-        return /*|start_in_ms|*/getStartTimeInMillis()
+    public long getAbsoluteEndTimeMillis() {
+        return /*|start_in_ms|*/getAbsoluteStartTimeMillis()
                 + /*|millSec|*/1000
                 * /*|minutes|*/60
                 * /*|dur_in_minutes|*/(long) duration;
@@ -116,10 +116,10 @@ public class ScheduleSlot {
      * @throws ParseException If there is an issue parsing the time slots.
      */
     public boolean isCollidingWith(ScheduleSlot otherSlot) throws ParseException {
-        long start_1 = getStartTimeInMillis();
-        long end_1 = getEndTimeInMillis();
-        long start_2 = otherSlot.getStartTimeInMillis();
-        long end_2 = otherSlot.getEndTimeInMillis();
+        long start_1 = getAbsoluteStartTimeMillis();
+        long end_1 = getAbsoluteEndTimeMillis();
+        long start_2 = otherSlot.getAbsoluteStartTimeMillis();
+        long end_2 = otherSlot.getAbsoluteEndTimeMillis();
 
         //  collision cases for [1] {2}
         //  1.start >= 2.start >= 2.end >= 1.end // [ {\\\\} ]
