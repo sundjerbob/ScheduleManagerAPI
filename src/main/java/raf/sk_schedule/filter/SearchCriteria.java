@@ -3,11 +3,13 @@ package raf.sk_schedule.filter;
 
 import raf.sk_schedule.api.Constants.WeekDay;
 import raf.sk_schedule.exception.ScheduleException;
+import raf.sk_schedule.filter.default_filters.*;
 import raf.sk_schedule.model.location.RoomProperties;
 import raf.sk_schedule.model.schedule.ScheduleSlot;
 
 import java.util.*;
 
+import static raf.sk_schedule.filter.CriteriaFilter.*;
 import static raf.sk_schedule.util.format.DateTimeFormatter.*;
 
 /**
@@ -16,16 +18,6 @@ import static raf.sk_schedule.util.format.DateTimeFormatter.*;
  */
 public class SearchCriteria {
 
-    // Constants for criteria keys
-    public static final int DATE_KEY = 0;
-    public static final int WEEK_DAY_KEY = 1;
-    public static final int START_TIME_KEY = 3;
-    public static final int END_TIME_KEY = 4;
-    public static final int DURATION_KEY = 2;
-    public static final int LOCATION_KEY = 5;
-    public static final int DYNAMIC_ATTRIBUTES_KEY = 6;
-    public static final int UPPER_BOUND_DATE_KEY = 7;
-    public static final int LOWER_BOUND_DATE_KEY = 8;
 
     // number of supported handles
     private static final int SUPPORTED_FILTERS = 9;
@@ -45,131 +37,16 @@ public class SearchCriteria {
 
         this.searchCriteria = searchCriteria;
         supportedFilters = new CriteriaFilter[SUPPORTED_FILTERS];
-        supportedFilters[DATE_KEY] = dateFilterHandle;
-        supportedFilters[WEEK_DAY_KEY] = weekDayFilterHandle;
-        supportedFilters[START_TIME_KEY] = startTimeFilterHandle;
-        supportedFilters[END_TIME_KEY] = endTimeFilterHandle;
-        supportedFilters[DURATION_KEY] = durationFilterHandle;
-        supportedFilters[LOCATION_KEY] = locationFilterHandle;
-        supportedFilters[UPPER_BOUND_DATE_KEY] = supportedFilters[DYNAMIC_ATTRIBUTES_KEY] = dynamicAttributesFilterHandle;
+        supportedFilters[DATE_KEY] = new DateFilter();
+        supportedFilters[WEEK_DAY_KEY] = new WeekDayFilter();
+        supportedFilters[START_TIME_KEY] = new StartTimeFilter();
+        supportedFilters[END_TIME_KEY] = new EndTimeFilter();
+        supportedFilters[DURATION_KEY] = new DurationFilter();
+        supportedFilters[LOCATION_KEY] = new LocationFilter();
+        supportedFilters[DYNAMIC_ATTRIBUTES_KEY] = new DynamicAttributesFilter();
+        supportedFilters[LOWER_BOUND_DATE_KEY] = new LowerBoundDateFilter();
+        supportedFilters[UPPER_BOUND_DATE_KEY] = new UpperBoundDateFilter();
     }
-
-
-    /**
-     * Functional interface for implementing custom filters.
-     */
-    public interface CriteriaFilter {
-        boolean filter(ScheduleSlot slot);
-    }
-
-    // Criteria filter implementations for default filters
-
-
-    // Implementation for date filter
-    private final CriteriaFilter dateFilterHandle = slot -> {
-        Object searchParam = getCriteria(DATE_KEY);
-        Date usableDate = null;
-        if (searchParam instanceof String)
-            usableDate = parseDate(searchParam.toString());
-        else if (searchParam instanceof Date)
-            usableDate = (Date) searchParam;
-        else
-            throw new ScheduleException("Search criteria property value query is not supported!");
-        return usableDate.getTime() != slot.getDate().getTime();
-
-    };
-
-    // Implementation for week day filter
-    private final CriteriaFilter weekDayFilterHandle = slot -> {
-        Object searchParam = getCriteria(WEEK_DAY_KEY);
-        WeekDay dayEnum = null;
-        if (searchParam instanceof String)
-            dayEnum = Enum.valueOf(WeekDay.class, searchParam.toString().toUpperCase());
-        else if (searchParam instanceof WeekDay)
-            dayEnum = (WeekDay) searchParam;
-
-        return slot.getDayOfWeek() != dayEnum;
-    };
-
-    // Implementation for start time filter
-    private final CriteriaFilter startTimeFilterHandle = slot -> {
-        Object searchParam = searchCriteria.get(START_TIME_KEY);
-        if (!(searchParam instanceof String))
-            throw new ScheduleException("Start time search parameter can be set only as a String!");
-        return parseTime(slot.getStartTime()).getTime() < parseTime((String) searchParam).getTime();
-    };
-
-    private final CriteriaFilter endTimeFilterHandle = slot -> {
-        // Implementation for end time filter
-        Object searchParam = searchCriteria.get(END_TIME_KEY);
-        if (!(searchParam instanceof String))
-            throw new ScheduleException("Start time search parameter can be set only as a String!");
-        return parseTime(slot.getEndTime()).getTime() > parseTime((String) searchParam).getTime();
-    };
-    private final CriteriaFilter durationFilterHandle = slot -> {
-        // Implementation for duration filter
-        Object searchParam = getCriteria(DURATION_KEY);
-        if (!(searchParam instanceof Number))
-            throw new ScheduleException("Duration search parameter can be represented only by a numeric value (number)!");
-        return slot.getDuration() != (int) searchParam;
-    };
-    private final CriteriaFilter locationFilterHandle = slot -> {
-        // Implementation for location filter
-        Object searchParam = getCriteria(LOCATION_KEY);
-        if (searchParam instanceof RoomProperties || searchParam instanceof String)
-            return !slot.getLocation().equals(searchParam);
-
-        throw new ScheduleException("Location search parameter can be set by stating the name of the room or a RoomProperties class object!");
-
-    };
-    private final CriteriaFilter dynamicAttributesFilterHandle = slot -> {
-        // Implementation for dynamic attributes filter
-        try {
-            if (!(getCriteria(DYNAMIC_ATTRIBUTES_KEY) instanceof Map<?, ?> searchParam))
-                throw new ScheduleException("Dynamic attributes search parameter can be applied only with Map instance!");
-
-            for (String attributeName : slot.getAttributes().keySet()) {
-                if (!searchParam.containsKey(attributeName))
-                    return true;
-            }
-            for (Object filterAttribute : (searchParam.keySet())) {
-                if (!slot.hasAttribute((String) filterAttribute)
-                        || !slot.getAttribute((String) filterAttribute).equals(searchParam.get(filterAttribute)))
-                    return true;
-            }
-            return false;
-        } catch (ClassCastException e) {
-            throw new ScheduleException(e.getMessage());
-        }
-    };
-
-    private final CriteriaFilter lowerBoundFilterHandle = slot -> {
-        // Implementation for lower bound filter
-        Object searchParam = searchCriteria.get(LOWER_BOUND_DATE_KEY);
-        Date lowerBound;
-        if (searchParam instanceof String)
-            lowerBound = parseDate((String) searchParam);
-        else if (searchParam instanceof Date)
-            lowerBound = (Date) searchParam;
-        else
-            throw new ScheduleException("Lower bound search parameter can be set only as String or java.util Date instance!");
-
-        return slot.getDate().getTime() < lowerBound.getTime();
-    };
-
-    private final CriteriaFilter upperBoundFilterHandle = slot -> {
-        //
-        Object searchParam = searchCriteria.get(UPPER_BOUND_DATE_KEY);
-        Date upperBound;
-        if (searchParam instanceof String)
-            upperBound = parseDate((String) searchParam);
-        else if (searchParam instanceof Date)
-            upperBound = (Date) searchParam;
-        else
-            throw new ScheduleException("Upper bound search parameter can be set only as String or java.util Date instance!");
-
-        return slot.getDate().getTime() > upperBound.getTime();
-    };
 
 
     public List<ScheduleSlot> filter(List<ScheduleSlot> schedule) {
@@ -177,7 +54,7 @@ public class SearchCriteria {
         while (iterator.hasNext()) {
             ScheduleSlot slot = iterator.next();
             for (int filterKey : searchCriteria.keySet()) {
-                if (supportedFilters[filterKey].filter(slot)) {
+                if (supportedFilters[filterKey].filter(slot, this)) {
                     iterator.remove();  //  iterators remove method so we dont get get
                     break;  //  remove the slot once for any matching filter so break
                 }
@@ -194,7 +71,7 @@ public class SearchCriteria {
      * @return The filtered list of `ScheduleSlot` instances.
      */
     public List<ScheduleSlot> filter(List<ScheduleSlot> schedule, CriteriaFilter customFilter) {
-        schedule.removeIf(customFilter::filter);
+        schedule.removeIf(scheduleSlot -> customFilter.filter(scheduleSlot, this));
         return schedule;
     }
 
