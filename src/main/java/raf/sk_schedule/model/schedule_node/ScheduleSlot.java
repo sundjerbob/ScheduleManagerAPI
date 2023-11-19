@@ -130,13 +130,26 @@ public class ScheduleSlot {
         return (start_1 <= start_2 && start_2 < end_1) || (start_2 <= start_1 && start_1 < end_2);
     }
 
-
+    /**
+     * Subscribes this {@link ScheduleSlot} instance to state propagation from a shared RepetitiveScheduleMapper.
+     * This method is part of a custom observer pattern implementation for propagating changes.
+     *
+     * @param sharedState The {@link RepetitiveScheduleMapper} to listen to for state changes.
+     * @return This ScheduleSlot instance for method chaining.
+     * @see RepetitiveScheduleMapper
+     */
     public ScheduleSlot listenToStatePropagation(RepetitiveScheduleMapper sharedState) {
         this.sharedState = sharedState;
         this.sharedState.addLinkedSlot(this);
         return this;
     }
 
+    /**
+     * Handles shared state propagation by updating the fields of this {@link ScheduleSlot} based on the shared state.
+     * This method is called when changes occur in the shared {@link RepetitiveScheduleMapper}.
+     *
+     * @see RepetitiveScheduleMapper
+     */
     public void handleSharedStatePropagation() {
 
         if (this.startTime.equals(sharedState.getStartTime()))
