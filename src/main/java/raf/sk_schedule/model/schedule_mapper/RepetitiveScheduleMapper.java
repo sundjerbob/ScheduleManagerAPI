@@ -85,7 +85,7 @@ public class RepetitiveScheduleMapper {
 
         // SlotOccurrences should have one element by this time...
         if (slotOccurrences.isEmpty()) {
-            throw new ScheduleException("No slot occurrences found.");
+            throw new ScheduleException("RepetitiveScheduleMapper:mapSlotReoccurrences() -> No slot occurrences found!");
         }
 
         // Time difference between each linked slot is the number of days (recurrencePeriod) multiplied by the milliseconds in one day
