@@ -8,6 +8,7 @@ package raf.sk_schedule.api;
  */
 public abstract class Constants {
 
+
     private Constants() {
     }
 

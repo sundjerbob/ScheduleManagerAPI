@@ -15,12 +15,15 @@ import static raf.sk_schedule.util.exporter.ScheduleExporterJSON.serializeObject
 import static raf.sk_schedule.util.date_formater.DateTimeFormatter.*;
 
 /**
- * This class represents a universal time slot within the scheduling component.
+ * This class represents a universal time slot within the scheduling component. A {@code ScheduleSlot} instance is bound within
+ * two dimensions: time (date and start time) and space(location). Collisions can occur only when two slots share the same space and,
+ * in addition, experience a time collision within that shared space. The concept of space refers to the location or venue
+ * associated with the schedule slot that is also a {@link RoomProperties} instance.
  */
 public class ScheduleSlot {
 
     /**
-     * Date of the time slot starts.
+     * Date of the time slot is contained.
      */
     private Date date;
 
@@ -60,6 +63,8 @@ public class ScheduleSlot {
 
         this.startTime = startTime;
 
+        long startTimeMills = -1;
+        long endTimeMills = -1;
         if (duration > 0) {
             if (endTime == null) {
 
@@ -73,8 +78,8 @@ public class ScheduleSlot {
                         );
 
             } else {
-                long startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
-                long endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
+                startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
+                endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
                 if (duration == (int) (endTimeMills - startTimeMills / (1000 * 60  /*|mills in minute|*/))) {
                     this.duration = duration;
                     this.endTime = endTime;
@@ -86,36 +91,68 @@ public class ScheduleSlot {
             }
         } else if (endTime != null) {
             this.endTime = endTime;
-            long startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
-            long endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
+            startTimeMills = parseDateTime(formatDate(date) + " " + this.startTime).getTime();
+            endTimeMills = parseDateTime(formatDate(date) + " " + endTime).getTime();
             this.duration = (int) (endTimeMills - startTimeMills / (1000 * 60  /*|mills in minute|*/));
         } else
             throw new ScheduleException("End time and duration are both not defined thus the be occupied time couldn't be calculated!");
 
-
         this.location = location;
         this.attributes = attributes;
+
+        if (startTimeMills == -1 || endTimeMills == -1)
+            throw new ScheduleException("ScheduleSlot constructor failed to make new because parameters are not correctly stated object!");
+        validateTimeInterval(startTimeMills, endTimeMills, duration);
     }
 
+    /**
+     * Checks equality in time and space dimensions. Two {@code ScheduleSlot} instances are considered equal if they share the
+     * same location and have identical absolute time intervals. Although they may be two different {@code ScheduleSlot} objects
+     * with distinct attribute values and names, they are equivalent parts of the scheduling time-space resources structure.
+     *
+     * @param obj The object to compare with this {@code ScheduleSlot}.
+     * @return {@code true} if the specified object is the same time instance in the context of space and time.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ScheduleSlot
+                && getAbsoluteStartTimeMillis() == ((ScheduleSlot) obj).getAbsoluteStartTimeMillis()
+                && getAbsoluteEndTimeMillis() == ((ScheduleSlot) obj).getAbsoluteEndTimeMillis();
+    }
+
+    /**
+     * Retrieves the absolute start time of this time slot in milliseconds since the epoch.
+     * The absolute start time is calculated by combining the date,
+     * formatted as per the scheduling component's standard (defined in {@link  raf.sk_schedule.api.Constants}),
+     * with the slot's start time, and then converting the resulting date-time string to milliseconds.
+     *
+     * @return The absolute start time of this time slot in milliseconds.
+     */
     public long getAbsoluteStartTimeMillis() {
         return parseDateTime(formatDateTime(this.date) + " " + startTime).getTime();
     }
 
+    /**
+     * Retrieves the absolute end time of this time slot in milliseconds since the epoch.
+     * The absolute end time is calculated by adding the duration of the slot (in minutes) to the absolute start time.
+     *
+     * @return The absolute end time of this time slot in milliseconds.
+     */
     public long getAbsoluteEndTimeMillis() {
-        return /*|start_in_ms|*/getAbsoluteStartTimeMillis()
-                + /*|millSec|*/1000
-                * /*|minutes|*/60
-                * /*|dur_in_minutes|*/(long) duration;
+        return getAbsoluteStartTimeMillis()
+                + 1000  // milliseconds in a second
+                * 60    // seconds in a minute
+                * (long) duration;  // duration of the slot in minutes
     }
+
 
     /**
      * Checks if this time slot is colliding with another time slot.
      *
      * @param otherSlot The other time slot to check for collisions.
      * @return True if there's a collision, false otherwise.
-     * @throws ParseException If there is an issue parsing the time slots.
      */
-    public boolean isCollidingWith(ScheduleSlot otherSlot) throws ParseException {
+    public boolean isCollidingWith(ScheduleSlot otherSlot) {
         long start_1 = getAbsoluteStartTimeMillis();
         long end_1 = getAbsoluteEndTimeMillis();
         long start_2 = otherSlot.getAbsoluteStartTimeMillis();
@@ -127,7 +164,10 @@ public class ScheduleSlot {
         //  2.start >= 1.start >= 1.end >= 2.end // { [\\\\] }
         //  2.start >= 1.start >= 2.end >= 1.end // { [\\\\} ]
 
-        return (start_1 <= start_2 && start_2 < end_1) || (start_2 <= start_1 && start_1 < end_2);
+
+        // Check if the slots share the same location and if the time collision has occurred
+
+        return location.equals(otherSlot.location) && (start_1 <= start_2 && start_2 < end_1) || (start_2 <= start_1 && start_1 < end_2);
     }
 
     /**
@@ -213,6 +253,24 @@ public class ScheduleSlot {
         endTime = formatTime(new Date(this.date.getTime() + (long) duration * 1000 * 60 /*|mills in minute|*/));
     }
 
+    static void validateTimeInterval(long absoluteStartTime, long absoluteEndTime, int duration) {
+
+
+        // Check if end time is before start time or if there is a time overflow
+        if (absoluteEndTime <= absoluteStartTime)
+            throw new ScheduleException("Invalid time slot parameters: End time must be after start time.");
+
+        long millsInDay = 1000 * 60 * 60 * 24;
+        long millsInMinute = 1000 * 60;
+        //check if the slot overflows from its contained date to another date in witch case the exception is thrown
+        if (absoluteStartTime % millsInDay != (absoluteStartTime + duration * millsInMinute) % millsInDay)
+            throw new ScheduleException("Schedule slot can't overflow to another day that is not a value set by \"date\" field." +
+                    "\nThis means the slot would start inside one date and end its duration inside another date witch is not supported behaviour within Schedule component!");
+
+        if (absoluteEndTime != absoluteStartTime + duration * millsInMinute)
+            throw new ScheduleException("Slots end time and duration does not match!");
+    }
+
     public void setLocation(RoomProperties location) {
         this.location = location;
     }
@@ -278,6 +336,7 @@ public class ScheduleSlot {
         String endTime;
         private int duration;
         private RoomProperties location;
+
         private Map<String, Object> attributes;
 
         public Builder() {
@@ -325,6 +384,31 @@ public class ScheduleSlot {
         public Builder setAttributes(Map<String, Object> attributes) {
             this.attributes = attributes;
             return this;
+        }
+
+        /**
+         * Retrieves the absolute start time of this time slot in milliseconds since the epoch.
+         * The absolute start time is calculated by combining the date,
+         * formatted as per the scheduling component's standard (defined in {@link  raf.sk_schedule.api.Constants}),
+         * with the slot's start time, and then converting the resulting date-time string to milliseconds.
+         *
+         * @return The absolute start time of this time slot in milliseconds.
+         */
+        public long getAbsoluteStartTimeMillis() {
+            return parseDateTime(formatDateTime(this.date) + " " + startTime).getTime();
+        }
+
+        /**
+         * Retrieves the absolute end time of this time slot in milliseconds since the epoch.
+         * The absolute end time is calculated by adding the duration of the slot (in minutes) to the absolute start time.
+         *
+         * @return The absolute end time of this time slot in milliseconds.
+         */
+        public long getAbsoluteEndTimeMillis() {
+            return getAbsoluteStartTimeMillis()
+                    + 1000  // milliseconds in a second
+                    * 60    // seconds in a minute
+                    * (long) duration;  // duration of the slot in minutes
         }
 
         public ScheduleSlot build() {
