@@ -109,7 +109,8 @@ public class ScheduleExporterJSON {
     public static String mapToJSON(Map<?, ?> map) {
         StringBuilder result = new StringBuilder("{ ");
         for (Map.Entry<?, ?> entry : map.entrySet()) {
-            result.append("\"")
+            result
+                    .append("\"")
                     .append(serializeObject(entry.getKey()))
                     .append("\" : ")
                     .append(serializeObject(entry.getValue()))

@@ -16,12 +16,17 @@ public class ScheduleSlotSorter {
      *
      * @param schedule       The list of ScheduleSlot instances to be sorted.
      * @param slotComparator The custom comparator defining the schedule-slots sorting logic.
-     * @deprecated
+     *
      */
     public List<?> sort(List<ScheduleSlot> schedule, ScheduleSlotComparator slotComparator) {
+        // make the buffer list to perform filtering computation on, with a value of passed schedule list
         List<ScheduleSlot> bufferList = new ArrayList<>(schedule);
+        // perform operation algorithm
         bufferList.sort(slotComparator::compare);
-        return new ArrayList<>(bufferList);
+        //change the value that the passed schedule list reference is pointing on to newly created list that is not the buffer list but has the same value
+        schedule = new ArrayList<>(bufferList);
+        // return the reference to the operation result list that is the same as the passed argument so the changes will be directly applied on the argument list
+        return schedule;
     }
 
     /**

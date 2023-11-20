@@ -74,6 +74,7 @@ public class SearchCriteria {
      * @return The filtered list of `ScheduleSlot` instances.
      */
     public List<ScheduleSlot> filter(List<ScheduleSlot> schedule) {
+        // perform operations on buffer list with passed value
         List<ScheduleSlot> bufferList = new ArrayList<>(schedule);
         Iterator<ScheduleSlot> iterator = bufferList.iterator();
         while (iterator.hasNext()) {
@@ -85,7 +86,9 @@ public class SearchCriteria {
                 }
             }
         }
+        //set the passed value to be newly created list with value of computed buffer list
         schedule = new ArrayList<>(bufferList);
+        //return the reference all tho its unnecessary because it was changed via memory reference of passed args (pointer)
         return schedule;
     }
 

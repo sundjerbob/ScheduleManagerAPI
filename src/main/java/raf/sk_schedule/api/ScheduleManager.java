@@ -230,6 +230,17 @@ public interface ScheduleManager {
     List<ScheduleSlot> getSchedule(String lowerBoundDate, String upperBoundDate);
 
     /**
+     * Gets the schedule slots within the specified date bounds (lowerBound and upperBound).
+     * If lowerBound is null, it uses the earliest date in the schedule.
+     * If upperBound is null, it uses the latest date in the schedule.
+     *
+     * @param lowerBoundDate The lower date bound for the schedule.
+     * @param upperBoundDate The upper date bound for the schedule.
+     * @return A list of schedule slots within the specified date bounds.
+     */
+    public List<ScheduleSlot> getSchedule(Date lowerBoundDate, Date upperBoundDate);
+
+    /**
      * Returns a list of all schedule slots in the schedule.
      *
      * @return A list of all schedule slots.
