@@ -1,7 +1,7 @@
 package raf.sk_schedule.api;
 
 /**
- * @apiNote This class should not be instanced nor extended.
+ * This class should not be instanced nor extended.
  * Its purpose is to hold all top-level constants that are used by schedule api.
  * All the constants are made public and can be accessed (are visible) outside the component.
  * Since there is no "sealed" keyword like in c#, we made constructor private.
@@ -28,8 +28,7 @@ public abstract class Constants {
 
     /**
      * Scheduling component uses this enumeration as the correctly ordered list of all days in a week.
-     *
-     * @apiNote WeekDay can be used by name or the index.
+     * WeekDay can be used by name or the index.
      */
     public enum WeekDay {
         SUNDAY,

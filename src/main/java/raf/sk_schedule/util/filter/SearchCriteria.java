@@ -74,7 +74,8 @@ public class SearchCriteria {
      * @return The filtered list of `ScheduleSlot` instances.
      */
     public List<ScheduleSlot> filter(List<ScheduleSlot> schedule) {
-        Iterator<ScheduleSlot> iterator = schedule.iterator();
+        List<ScheduleSlot> bufferList = new ArrayList<>(schedule);
+        Iterator<ScheduleSlot> iterator = bufferList.iterator();
         while (iterator.hasNext()) {
             ScheduleSlot slot = iterator.next();
             for (int filterKey : searchCriteria.keySet()) {
@@ -84,6 +85,7 @@ public class SearchCriteria {
                 }
             }
         }
+        schedule = new ArrayList<>(bufferList);
         return schedule;
     }
 
@@ -96,7 +98,9 @@ public class SearchCriteria {
      * @return The filtered list of `ScheduleSlot` instances.
      */
     public List<ScheduleSlot> filter(List<ScheduleSlot> schedule, CriteriaFilter customFilter) {
-        schedule.removeIf(scheduleSlot -> customFilter.filter(scheduleSlot, this));
+        List<ScheduleSlot> bufferList = new ArrayList<>(schedule);
+        bufferList.removeIf(scheduleSlot -> customFilter.filter(scheduleSlot, this));
+        schedule = new ArrayList<>(bufferList);
         return schedule;
     }
 
@@ -116,7 +120,8 @@ public class SearchCriteria {
      *                        <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
      *                        <li>{@link CriteriaFilter#UPPER_BOUND_DATE_KEY}</li>
      *                        <li>{@link CriteriaFilter#LOWER_BOUND_DATE_KEY}</li>
-     *                    </ul>     * @return `true` if the criteria is set, otherwise `false`.
+     *                    </ul>
+     * @return {@code true} if the criteria is set, otherwise {@code false}.
      */
     public boolean hasCriteria(int criteriaKey) {
         return searchCriteria.containsKey(criteriaKey);
@@ -197,7 +202,7 @@ public class SearchCriteria {
      * This method is working with a Map object of dynamic attributes,
      * alternatively you could do the same thing by getting Map object
      * accessing {@link SearchCriteria#searchCriteria} using {@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY} as a key
-     * and then calling {@code  get(attributeName)} that is defined in {@link java.util.Map}.
+     * and then calling {@code get(attributeName)} that is supported by {@link java.util.Map}.
      *
      * @param attributeName The name of the dynamic attribute.
      * @return The value of the dynamic attribute.
@@ -227,11 +232,22 @@ public class SearchCriteria {
         }
 
         /**
-         * Sets a criteria with a specific key and value.
+         * Sets the value of a specific criteria.
          *
          * @param criteriaKey   The key representing the criteria.
+         *                      The key values that are acceptable:
+         *                      <ul>
+         *                          <li>{@link CriteriaFilter#DATE_KEY}</li>
+         *                          <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
+         *                          <li>{@link CriteriaFilter#START_TIME_KEY}</li>
+         *                          <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+         *                          <li>{@link CriteriaFilter#DURATION_KEY}</li>
+         *                          <li>{@link CriteriaFilter#LOCATION_KEY}</li>
+         *                          <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
+         *                          <li>{@link CriteriaFilter#UPPER_BOUND_DATE_KEY}</li>
+         *                          <li>{@link CriteriaFilter#LOWER_BOUND_DATE_KEY}</li>
+         *                      </ul>
          * @param criteriaValue The value to set for the criteria.
-         * @return The builder instance.
          */
         public Builder setCriteria(int criteriaKey, Object criteriaValue) {
             searchCriteria.put(criteriaKey, criteriaValue);

@@ -16,9 +16,12 @@ public class ScheduleSlotSorter {
      *
      * @param schedule       The list of ScheduleSlot instances to be sorted.
      * @param slotComparator The custom comparator defining the schedule-slots sorting logic.
+     * @deprecated
      */
-    public static void sort(List<ScheduleSlot> schedule, ScheduleSlotComparator slotComparator) {
-        schedule.sort(slotComparator::compare);
+    public List<?> sort(List<ScheduleSlot> schedule, ScheduleSlotComparator slotComparator) {
+        List<ScheduleSlot> bufferList = new ArrayList<>(schedule);
+        bufferList.sort(slotComparator::compare);
+        return new ArrayList<>(bufferList);
     }
 
     /**
@@ -30,12 +33,13 @@ public class ScheduleSlotSorter {
      *                       Use {@link ScheduleSlotComparator#ASCENDING_ORDER} for ascending order.
      *                       Use {@link ScheduleSlotComparator#DESCENDING_ORDER} for descending order.
      */
-    public static List<ScheduleSlot> sort(List<ScheduleSlot> schedule, ScheduleSlotComparator slotComparator, int ascendingOrder) {
+    public List<ScheduleSlot> sort(List<ScheduleSlot> schedule, ScheduleSlotComparator slotComparator, int ascendingOrder) {
+        List<ScheduleSlot> bufferList = new ArrayList<>(schedule);
         if (ascendingOrder > 0)
-            schedule.sort(slotComparator::compare);
-        else schedule.sort((scheduleSlot1, scheduleSlot2) -> -1 * slotComparator.compare(scheduleSlot1, scheduleSlot2));
-
-        return new ArrayList<>(schedule);
+            bufferList.sort(slotComparator::compare);
+        else
+            bufferList.sort((scheduleSlot1, scheduleSlot2) -> -1 * slotComparator.compare(scheduleSlot1, scheduleSlot2));
+        return new ArrayList<>(bufferList);
     }
 
 
