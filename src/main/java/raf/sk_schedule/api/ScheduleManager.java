@@ -187,10 +187,8 @@ public interface ScheduleManager {
      *
      * @param filePath       The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
      * @param searchCriteria The search criteria for filtering.
-     * @param lowerBound     The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound     The upper date bound for export. If null, it will be the latest date in the schedule.
      */
-    int exportFilteredScheduleCSV(String filePath, SearchCriteria searchCriteria, String lowerBound, String upperBound);
+    int exportFilteredScheduleCSV(String filePath, SearchCriteria searchCriteria);
 
     /**
      * Export the schedule data to a JSON file within specified date bounds.
@@ -206,10 +204,8 @@ public interface ScheduleManager {
      *
      * @param filePath       The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
      * @param searchCriteria The search criteria for filtering.
-     * @param lowerBound     The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound     The upper date bound for export. If null, it will be the latest date in the schedule.
      */
-    int exportFilteredScheduleJSON(String filePath, SearchCriteria searchCriteria, String lowerBound, String upperBound);
+    int exportFilteredScheduleJSON(String filePath, SearchCriteria searchCriteria);
 
     /**
      * Returns a list of all room properties available in the schedule.

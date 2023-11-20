@@ -46,7 +46,7 @@ public class ScheduleExporterJSON {
      * @param objects The list of objects to be converted.
      * @return A JSON-formatted string representing the provided list of objects.
      */
-    public static String listToJSON(List<?> objects) {
+    private static String listToJSON(List<?> objects) {
 
         if (objects == null)
             return null;
@@ -73,7 +73,7 @@ public class ScheduleExporterJSON {
      * @param slot The `ScheduleSlot` instance to be converted.
      * @return A JSON-formatted string representing the provided `ScheduleSlot`.
      */
-    public static String slotToJSON(ScheduleSlot slot) {
+    private static String slotToJSON(ScheduleSlot slot) {
         return "{ " +
                 "\"startTime\": " + serializeObject(slot.getStartTime()) + "," +
                 "\"endTime\": " + serializeObject(slot.getStartTime()) + "," +
@@ -90,7 +90,7 @@ public class ScheduleExporterJSON {
      * @param room The `RoomProperties` instance to be converted.
      * @return A JSON-formatted string representing the provided `RoomProperties`.
      */
-    public static String roomToJSON(RoomProperties room) {
+    private static String roomToJSON(RoomProperties room) {
         return "{ " +
                 "\"name\":" + serializeObject(room.getName()) + "," +
                 "\"capacity\":" + serializeObject(room.getCapacity()) + "," +
@@ -106,7 +106,7 @@ public class ScheduleExporterJSON {
      * @param map The map to be converted.
      * @return A JSON-formatted string representing the provided map.
      */
-    public static String mapToJSON(Map<?, ?> map) {
+    private static String mapToJSON(Map<?, ?> map) {
         StringBuilder result = new StringBuilder("{ ");
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             result
