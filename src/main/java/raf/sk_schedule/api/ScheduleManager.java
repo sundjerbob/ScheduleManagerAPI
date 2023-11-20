@@ -131,7 +131,7 @@ public interface ScheduleManager {
      * @return True if the slot was successfully scheduled, false otherwise.
      */
     boolean scheduleRepetitiveTimeSlot(String startTime,
-                                       long duration,
+                                       int duration,
                                        String endTime,
                                        WeekDay weekDay,
                                        int recurrencePeriod,
