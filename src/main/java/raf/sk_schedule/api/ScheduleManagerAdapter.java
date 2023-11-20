@@ -1,7 +1,6 @@
 package raf.sk_schedule.api;
 
 
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -34,6 +33,8 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
 
     @Override
     public void initialize(Date startDate, Date endDate) {
+        this.startingDate = startDate;
+        this.endingDate = endDate;
     }
 
     @Override

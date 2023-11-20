@@ -22,7 +22,7 @@ public class ScheduleFileWriter {
      * @throws ScheduleException   If there is an issue creating the file.
      * @throws ScheduleIOException If an I/O error occurs while creating the file.
      */
-    public static File createFileIfNotExists(String filePath) {
+    public static File initializeFile(String filePath) {
         File file = new File(filePath);
         System.out.println(filePath);
         if (!file.exists()) {

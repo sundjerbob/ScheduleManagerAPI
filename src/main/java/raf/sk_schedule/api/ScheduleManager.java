@@ -1,6 +1,7 @@
 package raf.sk_schedule.api;
 
 import raf.sk_schedule.exception.ScheduleException;
+import raf.sk_schedule.exception.ScheduleIOException;
 import raf.sk_schedule.util.filter.SearchCriteria;
 import raf.sk_schedule.model.schedule_mapper.RepetitiveScheduleMapper;
 import raf.sk_schedule.model.location_node.RoomProperties;
@@ -48,9 +49,9 @@ public interface ScheduleManager {
      *
      * @param csvPath The path to the CSV file containing room properties.
      * @return The number of rows successfully imported.
-     * @throws IOException If there is an issue reading the CSV file.
+     * @throws ScheduleIOException If there is an issue reading the CSV file.
      */
-    public int loadRoomsSCV(String csvPath) throws IOException;
+    public int loadRoomsSCV(String csvPath) throws ScheduleIOException;
 
 
     /**
@@ -59,9 +60,9 @@ public interface ScheduleManager {
      *
      * @param csvPath The path to the CSV file containing schedule slots.
      * @return The number of rows successfully imported.
-     * @throws IOException If there is an issue reading the CSV file.
+     * @throws ScheduleIOException If there is an issue reading the CSV file.
      */
-    public int loadScheduleSCV(String csvPath) throws IOException;
+    public int loadScheduleSCV(String csvPath) throws ScheduleIOException;
 
     /**
      * Checks whether the schedule contains a room with the specified name (roomName).
@@ -121,12 +122,22 @@ public interface ScheduleManager {
      * schedule the slot. If both are null, the slot cannot be scheduled.
      *
      * @param startTime               The start time for the slot in "HH:mm" format.
+     * @param duration                The duration of the slot in minutes. It is not necessary if the endTime is not null.
+     * @param endTime                 The end time for the slot in "HH:mm" format. It is not necessary if the duration is defined positive number.
+     * @param weekDay                 The day of the week on which the occurrence of the first ScheduleSlot will be mapped. If weekDay is null, the first slot will be mapped at the schedulingIntervalStart date.
+     * @param recurrencePeriod        The number of days defining the interval between repetitions. After the first slot is mapped, every subsequent slot is scheduled at the end of passing recurrencePeriod number of days.
      * @param schedulingIntervalStart The start date for scheduling the slot (in "yyyy-MM-dd" format).
-     * @param duration                The duration of the slot in minutes.
      * @param schedulingIntervalEnd   The end date for scheduling the slot (in "yyyy-MM-dd" format).
      * @return True if the slot was successfully scheduled, false otherwise.
      */
-    boolean scheduleRepetitiveTimeSlot(String startTime, long duration, String schedulingIntervalStart, String schedulingIntervalEnd);
+    boolean scheduleRepetitiveTimeSlot(String startTime,
+                                       long duration,
+                                       String endTime,
+                                       WeekDay weekDay,
+                                       int recurrencePeriod,
+                                       String schedulingIntervalStart,
+                                       String schedulingIntervalEnd);
+
 
     boolean scheduleRepetitiveTimeSlot(RepetitiveScheduleMapper recurrenceInterval);
 

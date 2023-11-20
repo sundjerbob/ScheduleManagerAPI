@@ -343,6 +343,39 @@ public class RepetitiveScheduleMapper {
         }
 
         /**
+         * Sets the time of the day when the time frame starts.
+         *
+         * @param startTime The day name for recurrence.
+         * @return The builder instance for method chaining.
+         */
+        public Builder setStartTime(String startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        /**
+         * Sets the time of the day when the time frame starts.
+         *
+         * @param endTime The day name for recurrence.
+         * @return The builder instance for method chaining.
+         */
+        public Builder setEndTime(String endTime) {
+            this.endTime = endTime;
+            return this;
+        }
+
+        /**
+         * Sets the duration of the time frame in minutes.
+         *
+         * @param duration The duration of the time frame in minutes.
+         * @return The builder instance for method chaining.
+         */
+        public Builder setDuration(int duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        /**
          * Builds an instance of the `RepetitiveScheduleMapper` class with the specified settings.
          *
          * @return An instance of `RepetitiveScheduleMapper`.
