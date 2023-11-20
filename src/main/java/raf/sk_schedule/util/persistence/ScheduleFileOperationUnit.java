@@ -3,15 +3,12 @@ package raf.sk_schedule.util.persistence;
 import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.exception.ScheduleIOException;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Utility class for handling file operations related to the scheduling component.
  */
-public class ScheduleFileWriter {
+public class ScheduleFileOperationUnit {
 
 
     /**
@@ -48,9 +45,9 @@ public class ScheduleFileWriter {
      * @param file    The File object representing the target file.
      * @param content The string content to be written to the file.
      */
-    public static void writeStringToFile(File file, String content) {
+    public static void writeStringToFile(File file, String content, boolean append) {
         try {
-            FileWriter fileWriter = new FileWriter(file, true); // 'true' enables append mode
+            FileWriter fileWriter = new FileWriter(file, append);
             BufferedWriter writer = new BufferedWriter(fileWriter);
             writer.write(content);
             writer.newLine(); // Add a newline character after the content
@@ -59,4 +56,25 @@ public class ScheduleFileWriter {
             throw new ScheduleIOException(e);
         }
     }
+
+    /**
+     * Reads the entire content of a file and returns it as a string.
+     *
+     * @param filePath The path to the file to be read.
+     * @return The content of the file as a string.
+     * @throws ScheduleIOException If an I/O error occurs during file reading.
+     */
+    public static String readFileToString(String filePath) throws ScheduleIOException {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            throw new ScheduleIOException("An loading error has occurred in ScheduleFileOperation:readFileToString().\nError message: " + e.getMessage());
+        }
+        return content.toString();
+    }
+
 }
