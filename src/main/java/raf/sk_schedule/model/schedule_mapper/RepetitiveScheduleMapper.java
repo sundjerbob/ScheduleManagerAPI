@@ -117,7 +117,9 @@ public class RepetitiveScheduleMapper {
                     .setDuration(duration)
                     .setLocation(location)
                     .setAttributes(attributes)
-                    .build());
+                    .build()
+                    .listenToStatePropagation(this /*this*/) /* subscribing the slot to this mapper */
+            );
         }
 
         // Set the value of the linkedSlotInstances field as the list of mapped slots

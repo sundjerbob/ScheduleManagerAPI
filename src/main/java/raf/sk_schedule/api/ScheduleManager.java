@@ -101,9 +101,10 @@ public interface ScheduleManager {
      * Delete a room from the schedule.
      *
      * @param name The name of the room to be deleted.
+     * @return {@code true} if the room has been deleted successfully, {@code false} otherwise.
      * @throws ScheduleException is thrown if there was no room with name equal to name param value.
      */
-    void deleteRoom(String name) throws ScheduleException;
+    boolean deleteRoom(String name) throws ScheduleException;
 
 
     /**
