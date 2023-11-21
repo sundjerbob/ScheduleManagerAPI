@@ -128,14 +128,36 @@ public class RepetitiveScheduleMapper {
         return linkedSlotInstances;
     }
 
+    /* Observer pattern support methods */
+    /**
+     * Synchronizes the shared state of this `RepetitiveScheduleMapper` instance with all linked `ScheduleSlot` instances.
+     * This method is called internally to ensure that any changes made to the shared attributes are propagated
+     * to all linked slots, maintaining consistency among them.
+     */
     private void syncSharedState() {
         for (ScheduleSlot linkedSlot : linkedSlotInstances) {
             linkedSlot.handleSharedStatePropagation();
         }
     }
 
+    /**
+     * Adds a linked `ScheduleSlot` instance to the set of linked slots managed by this `RepetitiveScheduleMapper`.
+     * This method is used to associate a `ScheduleSlot` with the repetitive mapping defined by this mapper.
+     *
+     * @param linkedSlot The `ScheduleSlot` instance to be added as a linked slot.
+     */
     public void addLinkedSlot(ScheduleSlot linkedSlot) {
         linkedSlotInstances.add(linkedSlot);
+    }
+
+    /**
+     * Removes a linked `ScheduleSlot` instance from the set of linked slots managed by this `RepetitiveScheduleMapper`.
+     * This method is used to disassociate a `ScheduleSlot` from the repetitive mapping defined by this mapper.
+     *
+     * @param linkedSlot The `ScheduleSlot` instance to be removed from the set of linked slots.
+     */
+    public void removeLinkedSlot(ScheduleSlot linkedSlot) {
+        linkedSlotInstances.remove(linkedSlot);
     }
 
 
@@ -156,6 +178,9 @@ public class RepetitiveScheduleMapper {
         return weekDay;
     }
 
+    public List<ScheduleSlot> getLinkedSlotInstances() {
+        return new ArrayList<>(linkedSlotInstances);
+    }
 
     // Setters for recurrence settings
     public void setRecurrenceIntervalStart(Date intervalEnd) {

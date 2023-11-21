@@ -12,7 +12,6 @@ import static raf.sk_schedule.util.exporter.ScheduleExporterJSON.serializeObject
 public class RoomProperties {
 
     private String name;
-
     private int capacity;
     private int hasComputers;
     private boolean hasProjector;
@@ -39,6 +38,55 @@ public class RoomProperties {
         if (obj instanceof String)
             return obj.equals(name);
         return false;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int hasComputers() {
+        return hasComputers;
+    }
+
+    public boolean hasProjector() {
+        return hasProjector;
+    }
+
+    public boolean hasAttribute(String attributeName) {
+        return attributes.containsKey(attributeName);
+    }
+
+    public Object getAttribute(String attributeName) {
+        return attributes.get(attributeName);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return new HashMap<>(attributes);
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setHasComputers(int hasComputers) {
+        this.hasComputers = hasComputers;
+    }
+
+    public void setHasProjector(boolean hasProjector) {
+        this.hasProjector = hasProjector;
+    }
+
+    public void setAttribute(String key, Object value) {
+        attributes.put(key, value);
     }
 
     public static class Builder {
@@ -89,42 +137,6 @@ public class RoomProperties {
 
             return new RoomProperties(name, capacity, hasComputers, hasProjector, attributes);
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public int hasComputers() {
-        return hasComputers;
-    }
-
-    public boolean hasProjector() {
-        return hasProjector;
-    }
-
-    public Map<String, Object> getAttributes() {
-        return new HashMap<>(attributes);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void setHasComputers(int hasComputers) {
-        this.hasComputers = hasComputers;
-    }
-
-    public void setHasProjector(boolean hasProjector) {
-        this.hasProjector = hasProjector;
     }
 
 }

@@ -40,12 +40,15 @@ public class ScheduleFileOperationUnit {
     }
 
     /**
-     * Writes a string content to a file.
+     * Writes the specified content to the given file. If the file does not exist, it will be created.
      *
-     * @param file    The File object representing the target file.
-     * @param content The string content to be written to the file.
+     * @param file    The file to write to.
+     * @param content The content to be written to the file.
+     * @param append  If {@code true}, the content will be appended to the existing file content; otherwise, the file
+     *                will be overwritten with the new content.
+     * @throws ScheduleIOException If an I/O error occurs while writing to the file.
      */
-    public static void writeStringToFile(File file, String content, boolean append) {
+    public static void writeStringToFile(File file, String content, boolean append) throws ScheduleIOException {
         try {
             FileWriter fileWriter = new FileWriter(file, append);
             BufferedWriter writer = new BufferedWriter(fileWriter);

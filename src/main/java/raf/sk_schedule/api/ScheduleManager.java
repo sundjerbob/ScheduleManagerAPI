@@ -8,8 +8,6 @@ import raf.sk_schedule.model.location_node.RoomProperties;
 import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 import raf.sk_schedule.api.Constants.WeekDay;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -92,10 +90,10 @@ public interface ScheduleManager {
     /**
      * Get the room properties with the specified name.
      *
-     * @param name The name of the room to retrieve.
+     * @param roomName The name of the room to retrieve.
      * @return The room properties with the specified name, or null if not found.
      */
-    public RoomProperties getRoom(String name);
+    public RoomProperties getRoomByName(String roomName);
 
     /**
      * Delete a room from the schedule.
@@ -202,24 +200,26 @@ public interface ScheduleManager {
      * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
      * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
      */
-    int exportScheduleCSV(String filePath, String lowerBound, String upperBound);
+    int exportScheduleCSV(String filePath, String lowerBound, String upperBound, String... includedAttrib);
 
     /**
      * Export the filtered schedule data to a CSV file within specified date bounds.
      *
-     * @param filePath       The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
-     * @param searchCriteria The search criteria for filtering.
+     * @param filePath           The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param searchCriteria     The search criteria for filtering.
+     * @param includedAttributes Optional additional attributes to include in the CSV string.
      */
-    int exportFilteredScheduleCSV(String filePath, SearchCriteria searchCriteria);
+    int exportFilteredScheduleCSV(String filePath, SearchCriteria searchCriteria, String... includedAttributes);
 
     /**
      * Export the schedule data to a JSON file within specified date bounds.
      *
-     * @param filePath   The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
-     * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
+     * @param filePath           The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param lowerBound         The lower date bound for export. If null, it will be the earliest date in the schedule.
+     * @param upperBound         The upper date bound for export. If null, it will be the latest date in the schedule.
+     * @param includedAttributes Optional additional attributes to include in the CSV string.
      */
-    int exportScheduleJSON(String filePath, String lowerBound, String upperBound);
+    int exportScheduleJSON(String filePath, String lowerBound, String upperBound, String... includedAttributes);
 
     /**
      * Export the filtered schedule data to a JSON file within specified date bounds.
