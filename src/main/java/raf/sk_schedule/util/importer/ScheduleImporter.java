@@ -168,7 +168,7 @@ public class ScheduleImporter {
 
             String name = values[nameIndex].trim();
             int capacity = Integer.parseInt(values[capacityIndex].trim());
-            boolean hasComputers = Boolean.parseBoolean(values[hasComputersIndex].trim());
+            int hasComputers = Integer.parseInt(values[hasComputersIndex].trim());
             boolean hasProjector = Boolean.parseBoolean(values[hasProjectorIndex].trim());
 
             RoomProperties.Builder roomBuilder = new RoomProperties.Builder()

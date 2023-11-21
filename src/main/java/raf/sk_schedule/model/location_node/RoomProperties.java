@@ -14,12 +14,12 @@ public class RoomProperties {
     private String name;
 
     private int capacity;
-    private boolean hasComputers;
+    private int hasComputers;
     private boolean hasProjector;
 
     private final Map<String, Object> attributes;
 
-    private RoomProperties(String name, int capacity, boolean hasComputers, boolean hasProjector, Map<String, Object> attributes) {
+    private RoomProperties(String name, int capacity, int hasComputers, boolean hasProjector, Map<String, Object> attributes) {
         this.name = name;
         this.capacity = capacity;
         this.hasComputers = hasComputers;
@@ -44,14 +44,14 @@ public class RoomProperties {
     public static class Builder {
         private String name;
         private int capacity;
-        private boolean hasComputers;
+        private int hasComputers;
         private boolean hasProjector;
         private final Map<String, Object> attributes;
 
         public Builder() {
             // Set default values or customize them as needed
             capacity = 0;
-            hasComputers = false;
+            hasComputers = 0;
             hasProjector = false;
             attributes = new HashMap<>();
         }
@@ -66,7 +66,7 @@ public class RoomProperties {
             return this;
         }
 
-        public Builder setHasComputers(boolean hasComputers) {
+        public Builder setHasComputers(int hasComputers) {
             this.hasComputers = hasComputers;
             return this;
         }
@@ -99,7 +99,7 @@ public class RoomProperties {
         return capacity;
     }
 
-    public boolean hasComputers() {
+    public int hasComputers() {
         return hasComputers;
     }
 
@@ -119,7 +119,7 @@ public class RoomProperties {
         this.capacity = capacity;
     }
 
-    public void setHasComputers(boolean hasComputers) {
+    public void setHasComputers(int hasComputers) {
         this.hasComputers = hasComputers;
     }
 
