@@ -196,11 +196,12 @@ public interface ScheduleManager {
     /**
      * Export the schedule data to a CSV file within specified date bounds.
      *
-     * @param filePath   The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
-     * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
+     * @param filePath           The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param lowerBound         The lower date bound for export. If null, it will be the earliest date in the schedule.
+     * @param upperBound         The upper date bound for export. If null, it will be the latest date in the schedule.
+     * @param includedAttributes Optional additional attributes to include in the CSV string.
      */
-    int exportScheduleCSV(String filePath, String lowerBound, String upperBound, String... includedAttrib);
+    int exportScheduleCSV(String filePath, String lowerBound, String upperBound, String... includedAttributes);
 
     /**
      * Export the filtered schedule data to a CSV file within specified date bounds.
@@ -214,12 +215,11 @@ public interface ScheduleManager {
     /**
      * Export the schedule data to a JSON file within specified date bounds.
      *
-     * @param filePath           The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
-     * @param lowerBound         The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound         The upper date bound for export. If null, it will be the latest date in the schedule.
-     * @param includedAttributes Optional additional attributes to include in the CSV string.
+     * @param filePath   The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
+     * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
      */
-    int exportScheduleJSON(String filePath, String lowerBound, String upperBound, String... includedAttributes);
+    int exportScheduleJSON(String filePath, String lowerBound, String upperBound);
 
     /**
      * Export the filtered schedule data to a JSON file within specified date bounds.
