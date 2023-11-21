@@ -112,10 +112,9 @@ public interface ScheduleManager {
      *
      * @param timeSlot The time slot to be added.
      * @return True if the time slot was successfully added; false otherwise.
-     * @throws ParseException    If there is an issue parsing the time slot.
      * @throws ScheduleException if a slot is already occupied
      */
-    boolean scheduleTimeSlot(ScheduleSlot timeSlot) throws ParseException, ScheduleException;
+    boolean scheduleTimeSlot(ScheduleSlot timeSlot) throws ScheduleException;
 
     /**
      * Schedules a repetitive time slot based on the provided parameters. The slot can be set by
@@ -129,27 +128,38 @@ public interface ScheduleManager {
      * @param recurrencePeriod        The number of days defining the interval between repetitions. After the first slot is mapped, every subsequent slot is scheduled at the end of passing recurrencePeriod number of days.
      * @param schedulingIntervalStart The start date for scheduling the slot (in "yyyy-MM-dd" format).
      * @param schedulingIntervalEnd   The end date for scheduling the slot (in "yyyy-MM-dd" format).
-     * @return True if the slot was successfully scheduled, false otherwise.
+     * @return The list of ScheduleSlot objects that have been mapped by using specified repetitive recurrence parameters.
+     * @throws ScheduleException If the time-space collision is detected and the repetitive time slot can't be scheduled.
      */
-    boolean scheduleRepetitiveTimeSlot(String startTime,
-                                       int duration,
-                                       String endTime,
-                                       WeekDay weekDay,
-                                       int recurrencePeriod,
-                                       String schedulingIntervalStart,
-                                       String schedulingIntervalEnd);
+    List<ScheduleSlot> scheduleRepetitiveTimeSlot(String startTime,
+                                                  int duration,
+                                                  String endTime,
+                                                  WeekDay weekDay,
+                                                  int recurrencePeriod,
+                                                  String schedulingIntervalStart,
+                                                  String schedulingIntervalEnd) throws ScheduleException;
 
-
-    boolean scheduleRepetitiveTimeSlot(RepetitiveScheduleMapper recurrenceInterval);
+    /**
+     * Schedules a repetitive time slot based on the provided parameters. The slot can be set by
+     * passing a duration, an endTime, or both. If one of them is null, the other will be used to
+     * schedule the slot. If both are null, the slot cannot be scheduled.
+     *
+     * @param recurrenceInterval The RepetitiveScheduleMapper that is configured with desired repetitive recurrence parameters,
+     *                           and that will be used for mapping ScheduleSlot objects.
+     * @return The list containing all ScheduleSlot objects that have been mapped using the recurrenceInterval argument object.
+     * @throws ScheduleException If the time-space collision is detected and the repetitive time slot can't be scheduled.
+     */
+    List<ScheduleSlot> scheduleRepetitiveTimeSlot(RepetitiveScheduleMapper recurrenceInterval) throws ScheduleException;
 
 
     /**
      * Delete a time slot from the schedule.
      *
      * @param timeSlot The time slot to be deleted.
-     * @return True if the time slot was successfully deleted; false otherwise.
+     * @return List containing one or more ScheduleSlot objects that have been removed as a result of this action.
+     * @throws ScheduleException if argument timeSlot can not be found in schedule thus it can't be deleted.
      */
-    boolean deleteTimeSlot(ScheduleSlot timeSlot);
+    List<ScheduleSlot> deleteTimeSlot(ScheduleSlot timeSlot);
 
     /**
      * Move a time slot to a new time and location.

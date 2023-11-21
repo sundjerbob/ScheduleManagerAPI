@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static raf.sk_schedule.util.date_formater.DateTimeFormatter.parseDate;
 import static raf.sk_schedule.util.persistence.ScheduleFileOperationUnit.readFileToString;
 
 /**
@@ -57,11 +58,10 @@ public class ScheduleImporter {
         // Split the file content into lines
         String[] lines = fileContent.split("\n");
 
-        // Extract column names from the header row
-        String header = lines[0];
-        String[] columnNames = header.split(",");
+        String[] columnNames = lines[0].split(",");
 
         // Find the indices of the mandatory columns
+        int dateIndex = -1;
         int startIndex = -1;
         int locationIndex = -1;
         int durationIndex = -1;
@@ -71,6 +71,7 @@ public class ScheduleImporter {
         for (int i = 0; i < columnNames.length; i++) {
             String columnName = columnNames[i].trim().toLowerCase();
             switch (columnName) {
+                case "date" -> dateIndex = i;
                 case "start" -> startIndex = i;
                 case "location" -> locationIndex = i;
                 case "duration" -> durationIndex = i;
@@ -79,8 +80,9 @@ public class ScheduleImporter {
         }
 
         // check if there is any mandatory column missing
-        if (startIndex == -1 || locationIndex == -1 || (durationIndex == -1 && endIndex == -1)) {
+        if (dateIndex == -1 || startIndex == -1 || locationIndex == -1 || (durationIndex == -1 && endIndex == -1)) {
             throw new ScheduleIOException("Missing required columns in the CSV file.\nColumns that are missing are:"
+                    + (dateIndex == -1 ? " 'date' " : "")
                     + (startIndex == -1 ? " 'start' " : "")
                     + (locationIndex == -1 ? " 'location' " : "")
                     + (startIndex == -1 ? " 'start' " : "")
@@ -91,31 +93,18 @@ public class ScheduleImporter {
         for (int row = 1; row < lines.length; row++) {
             String[] values = lines[row].split(",");
 
-            if (values.length < 3) { // check if there is non-sufficient number of columns missing from the current row
+            if (values.length < 4)  // check if there is non-sufficient number of columns missing from the current row
                 throw new ScheduleIOException("There is a column missing in a row.");
-            }
 
-            String start = values[startIndex].trim();
-            String location = values[locationIndex].trim();
-            int duration = -1;
-            String end = "";
+
+            ScheduleSlot.Builder slotBuilder = new ScheduleSlot.Builder()
+                    .setDate(parseDate(values[dateIndex]))
+                    .setStartTime(values[startIndex])
+                    .setLocation(rooms.get(values[locationIndex]));
             if (durationIndex != -1)
-                duration = Integer.parseInt(values[durationIndex].trim());
-            else
-                end = values[endIndex].trim();
-
-            // Create a ScheduleSlot instance and add attributes for mandatory columns
-            ScheduleSlot.Builder slotBuilder =
-                    new ScheduleSlot.Builder()
-                            .setStartTime(start)
-                            .setLocation(rooms.get(location));
-
-            if (duration != -1) {
-                slotBuilder.setDuration(duration);
-            } else {
-                slotBuilder.setEndTime(end);
-            }
-
+                slotBuilder.setDuration(Integer.parseInt(values[durationIndex]));
+            if (endIndex != -1)
+                slotBuilder.setEndTime(values[endIndex]);
             // Add additional attributes for columns beyond the mandatory ones
             for (int i = 0; i < columnNames.length; i++) {
                 if (i != startIndex && i != locationIndex && i != durationIndex && i != endIndex) {

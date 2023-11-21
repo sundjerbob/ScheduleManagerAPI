@@ -116,6 +116,7 @@ public class ScheduleSlot {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof ScheduleSlot
+                && location.equals(((ScheduleSlot) obj).location)
                 && getAbsoluteStartTimeMillis() == ((ScheduleSlot) obj).getAbsoluteStartTimeMillis()
                 && getAbsoluteEndTimeMillis() == ((ScheduleSlot) obj).getAbsoluteEndTimeMillis();
     }
@@ -182,6 +183,10 @@ public class ScheduleSlot {
         this.sharedState = sharedState;
         this.sharedState.addLinkedSlot(this);
         return this;
+    }
+
+    public RepetitiveScheduleMapper getSharedState() {
+        return sharedState;
     }
 
     /**
@@ -321,6 +326,7 @@ public class ScheduleSlot {
     }
 
 
+
     @Override
     public String toString() {
         return "<on day:" + date
@@ -329,6 +335,7 @@ public class ScheduleSlot {
                 + "> <location: " + location.getName()
                 + "> <properties: " + serializeObject(attributes) + ">";
     }
+
 
     public static class Builder {
         private Date date;
