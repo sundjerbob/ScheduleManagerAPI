@@ -25,7 +25,7 @@ public class StartTimeFilter implements CriteriaFilter {
     @Override
     public boolean filter(ScheduleSlot slot, SearchCriteria searchCriteria) {
 
-        Object searchParam = searchCriteria.getCriteria(START_TIME_KEY);
+        Object searchParam = searchCriteria.getCriteria(LOWER_BOUND_TIME_KEY);
         if (!(searchParam instanceof String))
             throw new ScheduleException("Start time search parameter can be set only as a String!");
         return parseTime(slot.getStartTime()).getTime() < parseTime((String) searchParam).getTime();

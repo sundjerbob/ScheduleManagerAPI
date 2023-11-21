@@ -28,8 +28,8 @@ public class SearchCriteria {
      * <ul>
      *     <li>{@link CriteriaFilter#DATE_KEY}</li>
      *     <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
-     *     <li>{@link CriteriaFilter#START_TIME_KEY}</li>
-     *     <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *     <li>{@link CriteriaFilter#LOWER_BOUND_DATE_KEY}</li>
+     *     <li>{@link CriteriaFilter#UPPER_BOUND_TIME_KEY}</li>
      *     <li>{@link CriteriaFilter#DURATION_KEY}</li>
      *     <li>{@link CriteriaFilter#LOCATION_KEY}</li>
      *     <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
@@ -57,8 +57,8 @@ public class SearchCriteria {
 
         supportedFilters[CriteriaFilter.DATE_KEY] = new DateFilter();
         supportedFilters[CriteriaFilter.WEEK_DAY_KEY] = new WeekDayFilter();
-        supportedFilters[CriteriaFilter.START_TIME_KEY] = new StartTimeFilter();
-        supportedFilters[CriteriaFilter.END_TIME_KEY] = new EndTimeFilter();
+        supportedFilters[CriteriaFilter.UPPER_BOUND_TIME_KEY] = new StartTimeFilter();
+        supportedFilters[CriteriaFilter.UPPER_BOUND_TIME_KEY] = new EndTimeFilter();
         supportedFilters[CriteriaFilter.DURATION_KEY] = new DurationFilter();
         supportedFilters[CriteriaFilter.LOCATION_KEY] = new LocationFilter();
         supportedFilters[CriteriaFilter.DYNAMIC_ATTRIBUTES_KEY] = new DynamicAttributesFilter();
@@ -116,8 +116,8 @@ public class SearchCriteria {
      *                    <ul>
      *                        <li>{@link CriteriaFilter#DATE_KEY}</li>
      *                        <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
-     *                        <li>{@link CriteriaFilter#START_TIME_KEY}</li>
-     *                        <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#LOWER_BOUND_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#UPPER_BOUND_TIME_KEY}</li>
      *                        <li>{@link CriteriaFilter#DURATION_KEY}</li>
      *                        <li>{@link CriteriaFilter#LOCATION_KEY}</li>
      *                        <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
@@ -138,8 +138,8 @@ public class SearchCriteria {
      *                    <ul>
      *                        <li>{@link CriteriaFilter#DATE_KEY}</li>
      *                        <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
-     *                        <li>{@link CriteriaFilter#START_TIME_KEY}</li>
-     *                        <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#LOWER_BOUND_TIME_KEY}</li>
+     *                        <li>{@link CriteriaFilter#UPPER_BOUND_TIME_KEY}</li>
      *                        <li>{@link CriteriaFilter#DURATION_KEY}</li>
      *                        <li>{@link CriteriaFilter#LOCATION_KEY}</li>
      *                        <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
@@ -160,8 +160,8 @@ public class SearchCriteria {
      *                      <ul>
      *                          <li>{@link CriteriaFilter#DATE_KEY}</li>
      *                          <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
-     *                          <li>{@link CriteriaFilter#START_TIME_KEY}</li>
-     *                          <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+     *                          <li>{@link CriteriaFilter#LOWER_BOUND_TIME_KEY}</li>
+     *                          <li>{@link CriteriaFilter#UPPER_BOUND_TIME_KEY}</li>
      *                          <li>{@link CriteriaFilter#DURATION_KEY}</li>
      *                          <li>{@link CriteriaFilter#LOCATION_KEY}</li>
      *                          <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
@@ -242,8 +242,8 @@ public class SearchCriteria {
          *                      <ul>
          *                          <li>{@link CriteriaFilter#DATE_KEY}</li>
          *                          <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
-         *                          <li>{@link CriteriaFilter#START_TIME_KEY}</li>
-         *                          <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+         *                          <li>{@link CriteriaFilter#UPPER_BOUND_TIME_KEY}</li>
+         *                          <li>{@link CriteriaFilter#LOWER_BOUND_TIME_KEY}</li>
          *                          <li>{@link CriteriaFilter#DURATION_KEY}</li>
          *                          <li>{@link CriteriaFilter#LOCATION_KEY}</li>
          *                          <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>

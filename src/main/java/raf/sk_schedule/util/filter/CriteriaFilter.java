@@ -9,8 +9,8 @@ import raf.sk_schedule.model.schedule_node.ScheduleSlot;
  * <ul>
  *     <li>{@link CriteriaFilter#DATE_KEY}</li>
  *     <li>{@link CriteriaFilter#WEEK_DAY_KEY}</li>
- *     <li>{@link CriteriaFilter#START_TIME_KEY}</li>
- *     <li>{@link CriteriaFilter#END_TIME_KEY}</li>
+ *     <li>{@link CriteriaFilter#LOWER_BOUND_TIME_KEY}</li>
+ *     <li>{@link CriteriaFilter#UPPER_BOUND_TIME_KEY}</li>
  *     <li>{@link CriteriaFilter#DURATION_KEY}</li>
  *     <li>{@link CriteriaFilter#LOCATION_KEY}</li>
  *     <li>{@link CriteriaFilter#DYNAMIC_ATTRIBUTES_KEY}</li>
@@ -32,14 +32,14 @@ public interface CriteriaFilter {
     int WEEK_DAY_KEY = 1;
 
     /**
-     * Constant representing the key for the start time criteria.
+     * Constant representing the key for the earliest time bound to look for.
      */
-    int START_TIME_KEY = 3;
+    int LOWER_BOUND_TIME_KEY = 3;
 
     /**
-     * Constant representing the key for the end time criteria.
+     * Constant representing the key for the latest time bound to look for.
      */
-    int END_TIME_KEY = 4;
+    int UPPER_BOUND_TIME_KEY = 4;
 
     /**
      * Constant representing the key for the duration criteria.

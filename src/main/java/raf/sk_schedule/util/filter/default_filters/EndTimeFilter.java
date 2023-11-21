@@ -23,7 +23,7 @@ public class EndTimeFilter implements CriteriaFilter {
     @Override
     public boolean filter(ScheduleSlot slot, SearchCriteria searchCriteria) {
         // Implementation for end time filter
-        Object searchParam = searchCriteria.getCriteria(END_TIME_KEY);
+        Object searchParam = searchCriteria.getCriteria(UPPER_BOUND_TIME_KEY);
         if (!(searchParam instanceof String))
             throw new ScheduleException("Start time search parameter can be set only as a String!");
         return parseTime(slot.getEndTime()).getTime() > parseTime((String) searchParam).getTime();
