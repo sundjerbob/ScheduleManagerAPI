@@ -30,9 +30,8 @@ public interface ScheduleManager {
     void initialize(Object lowerDateBound, Object upperDateBound);
 
 
-    void setExcludedWeekDays(WeekDay... days);
+    void setExcludedWeekDays(Object... days);
 
-    void setExcludedWeekDays(String... days);
 
     /**
      * Load room properties from a CSV file specified by csvPath and add them to the schedule.

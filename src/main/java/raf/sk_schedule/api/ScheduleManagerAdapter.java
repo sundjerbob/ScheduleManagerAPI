@@ -1,9 +1,13 @@
 package raf.sk_schedule.api;
 
 
+import raf.sk_schedule.exception.ScheduleException;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static raf.sk_schedule.api.Constants.*;
 import static raf.sk_schedule.util.date_formater.DateTimeFormatter.parseDate;
@@ -12,27 +16,32 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
 
     protected Date startingDate;
     protected Date endingDate;
-    protected WeekDay[] excludedDays;
+    protected List<WeekDay> excludedDays;
     protected SimpleDateFormat dateFormat;
     protected SimpleDateFormat dateTimeFormat;
 
 
     protected ScheduleManagerAdapter() {
-        excludedDays = new WeekDay[WeekDay.values().length];
+        excludedDays = new ArrayList<>();
         dateFormat = new SimpleDateFormat(DATE_FORMAT);
         dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
 
     }
 
 
-    protected boolean isAcceptableDay(Object day) {
-        for (WeekDay excludedDay : WeekDay.values()) {
-            if (day instanceof String && Enum.valueOf(WeekDay.class, ((String) day).toUpperCase()) == excludedDay)
-                return false;
-            else if (day instanceof WeekDay && day == excludedDay)
-                return false;
-        }
-        return true;
+    protected boolean isExcludedDay(Object day) {
+
+        WeekDay weekDay;
+        if (day instanceof String)
+            weekDay = Enum.valueOf(WeekDay.class, day.toString().toUpperCase());
+        if (day instanceof Number)
+            weekDay = WeekDay.values()[(int) day];
+        else if (day instanceof WeekDay)
+            weekDay = (WeekDay) day;
+        else
+            throw new ScheduleException("The argument of this method: \"isExcludedDay()\" can be either string, number or WeekDay enumeration instance!");
+
+        return excludedDays.contains(weekDay);
     }
 
     @Override
@@ -42,24 +51,20 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
     }
 
     @Override
-    public void setExcludedWeekDays(WeekDay... excludedDays) {
+    public void setExcludedWeekDays(Object... excludedDays) {
+        //reset the values
+        this.excludedDays = new ArrayList<>();
+        //fill in the new values
+        for (Object excludedDay : excludedDays) {
 
-        // clear array
-        Arrays.fill(this.excludedDays, null);
+            if (excludedDay instanceof String)
+                this.excludedDays.add(Enum.valueOf(WeekDay.class, excludedDay.toString().toUpperCase()));
 
-        for (WeekDay excludedDay : excludedDays) {
-            this.excludedDays[excludedDay.ordinal()] = excludedDay;
-        }
-    }
+            else if (excludedDay instanceof WeekDay)
+                this.excludedDays.add((WeekDay) excludedDay);
 
-    @Override
-    public void setExcludedWeekDays(String... excludedDays) {
-        // clear array
-        Arrays.fill(this.excludedDays, null);
-
-        for (String str : excludedDays) {
-            String excludedDay = str.toUpperCase();
-            this.excludedDays[Enum.valueOf(WeekDay.class, excludedDay).ordinal()] = Enum.valueOf(WeekDay.class, excludedDay);
+            else if (excludedDay instanceof Number)
+                this.excludedDays.add(WeekDay.values()[(int) excludedDay]);
         }
     }
 
