@@ -151,6 +151,8 @@ public interface ScheduleManager {
     List<ScheduleSlot> bookRepetitiveScheduleSlot(RepetitiveScheduleMapper recurrenceInterval) throws ScheduleException;
 
 
+    ScheduleSlot getScheduleSlot(Object date, String startTime, String endTime, String location);
+
     /**
      * Delete a time slot from the schedule.
      *
@@ -164,8 +166,8 @@ public interface ScheduleManager {
     void moveScheduleSlot(ScheduleSlot scheduleSlot,
                           Object newDate,
                           String newStartTime,
-                          int newDuration,
-                          String newEndTime);
+                          String newEndTime,
+                          RoomProperties newLocation);
 
     /**
      * Check if a specific time slot is available.
@@ -176,7 +178,7 @@ public interface ScheduleManager {
     List<ScheduleSlot> isScheduleSlotAvailable(ScheduleSlot scheduleSlot);
 
 
-    List<ScheduleSlot> isScheduleSlotAvailable(String date, String startTime, String endTime, String location);
+    List<ScheduleSlot> isScheduleSlotAvailable(Object date, String startTime, String endTime, String location);
 
     /**
      * Get a list of free time slots within a specified date range.

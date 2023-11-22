@@ -75,10 +75,10 @@ public class ScheduleExporterJSON {
      */
     private static String slotToJSON(ScheduleSlot slot) {
         return "{ " +
-                "\"startTime\": " + serializeObject(slot.getStartTime()) + "," +
-                "\"endTime\": " + serializeObject(slot.getStartTime()) + "," +
-                "\"duration\": " + serializeObject(slot.getDuration()) + "," +
-                "\"location\": " + serializeObject(slot.getLocation()) + "," +
+                "\"startTime\": " + serializeObject(slot.getStartTime()) + ", " +
+                "\"endTime\": " + serializeObject(slot.getStartTime()) + ", " +
+                "\"duration\": " + serializeObject(slot.getDuration()) + ", " +
+                "\"location\": " + serializeObject(slot.getLocation()) + ", " +
                 "\"attributes\": " + serializeObject(slot.getAttributes()) +
                 "}";
     }
@@ -92,11 +92,11 @@ public class ScheduleExporterJSON {
      */
     private static String roomToJSON(RoomProperties room) {
         return "{ " +
-                "\"name\":" + serializeObject(room.getName()) + "," +
-                "\"capacity\":" + serializeObject(room.getCapacity()) + "," +
-                "\"hasComputers\":" + serializeObject(room.hasComputers()) + "," +
-                "\"hasProjector\":" + serializeObject(room.hasProjector()) + "," +
-                "\"extra\":" + serializeObject(room.getAttributes()) +
+                "\"name\": " + serializeObject(room.getName()) + ", " +
+                "\"capacity\": " + serializeObject(room.getCapacity()) + ", " +
+                "\"hasComputers\": " + serializeObject(room.hasComputers()) + ", " +
+                "\"hasProjector\": " + serializeObject(room.hasProjector()) + ", " +
+                "\"extra\": " + serializeObject(room.getAttributes()) +
                 "}";
     }
 
@@ -111,9 +111,9 @@ public class ScheduleExporterJSON {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             result
                     .append(serializeObject(entry.getKey()))
-                    .append(" : ")
+                    .append(": ")
                     .append(serializeObject(entry.getValue()))
-                    .append(",");
+                    .append(", ");
         }
         if (!map.isEmpty()) {
             result.setLength(result.length() - 1); // Remove the trailing comma

@@ -28,7 +28,7 @@ public class RoomProperties {
 
     @Override
     public String toString() {
-        return "name: " + name + " capacity: " + capacity + " has_computers: " + hasComputers + " has projector: " + hasProjector + " " + serializeObject(attributes);
+        return "|name: " + name + "| |capacity: " + capacity + "| |has_computers: " + hasComputers + "| |has projector: " + hasProjector + "| |" + serializeObject(attributes);
     }
 
     @Override
