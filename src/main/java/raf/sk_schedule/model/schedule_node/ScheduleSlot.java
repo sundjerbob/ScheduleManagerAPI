@@ -331,7 +331,7 @@ public class ScheduleSlot {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int dayOfWeekIndex = calendar.get(Calendar.DAY_OF_WEEK);
-        return WeekDay.values()[dayOfWeekIndex];
+        return WeekDay.values()[dayOfWeekIndex - 1];
     }
 
 

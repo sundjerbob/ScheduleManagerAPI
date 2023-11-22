@@ -26,14 +26,10 @@ public class DynamicAttributesFilter implements CriteriaFilter {
         try {
             if (!(searchCriteria.getCriteria(DYNAMIC_ATTRIBUTES_KEY) instanceof Map<?, ?> searchParam))
                 throw new ScheduleException("Dynamic attributes search parameter can be applied only with Map instance!");
-
-            for (String attributeName : slot.getAttributes().keySet()) {
-                if (!searchParam.containsKey(attributeName))
+            for (Object attribute : searchParam.keySet()) {
+                if (!slot.hasAttribute(attribute.toString()))
                     return true;
-            }
-            for (Object filterAttribute : (searchParam.keySet())) {
-                if (!slot.hasAttribute((String) filterAttribute)
-                        || !slot.getAttribute((String) filterAttribute).equals(searchParam.get(filterAttribute)))
+                else if (!slot.getAttribute(attribute.toString()).equals(searchParam.get(attribute)))
                     return true;
             }
             return false;

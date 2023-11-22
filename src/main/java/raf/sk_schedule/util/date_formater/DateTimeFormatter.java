@@ -38,7 +38,7 @@ public class DateTimeFormatter {
         try {
             return dateFormat.parse(date);
         } catch (ParseException e) {
-            throw new ScheduleException("The universal format for date within schedule component is: " + DATE_FORMAT + " !");
+            throw new ScheduleException(" The value: " + date + " couldn't be parsed. The universal format for date within schedule component is: " + DATE_FORMAT + " !");
         }
     }
 
@@ -70,7 +70,7 @@ public class DateTimeFormatter {
         try {
             return timeFormat.parse(time);
         } catch (ParseException e) {
-            throw new ScheduleException("The universal format for time within schedule component is: " + TIME_FORMAT + " !");
+            throw new ScheduleException(" The value: " + time + " couldn't be parsed. The universal format for time within schedule component is: " + TIME_FORMAT + " !");
         }
     }
 
@@ -87,15 +87,15 @@ public class DateTimeFormatter {
     /**
      * Parses a string into a Date object using the specified date and time format.
      *
-     * @param date The string representing the date and time to be parsed.
+     * @param dateAndTime The string representing the date and time to be parsed.
      * @return The parsed Date object.
      * @throws ScheduleException If the date and time string is not in the expected format.
      */
-    public static Date parseDateTime(String date) {
+    public static Date parseDateTime(String dateAndTime) {
         try {
-            return dateTimeFormat.parse(date);
+            return dateTimeFormat.parse(dateAndTime);
         } catch (ParseException e) {
-            throw new ScheduleException("The universal format for date & time within schedule component is: " + DATE_TIME_FORMAT + " !");
+            throw new ScheduleException(" The value: " + dateAndTime + " couldn't be parsed. The universal format for date & time within schedule component is: " + DATE_TIME_FORMAT + " !");
 
         }
     }
