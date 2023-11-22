@@ -24,17 +24,21 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
 
     }
 
-    @Override
-    public void initialize(String startDate, String endDate) {
-        this.startingDate = parseDate(startDate);
-        this.endingDate = parseDate(endDate);
 
+    protected boolean isAcceptableDay(Object day) {
+        for (WeekDay excludedDay : WeekDay.values()) {
+            if (day instanceof String && Enum.valueOf(WeekDay.class, ((String) day).toUpperCase()) == excludedDay)
+                return false;
+            else if (day instanceof WeekDay && day == excludedDay)
+                return false;
+        }
+        return true;
     }
 
     @Override
-    public void initialize(Date startDate, Date endDate) {
-        this.startingDate = startDate;
-        this.endingDate = endDate;
+    public void initialize(Object lowerDateBound, Object upperDateBound) {
+        this.startingDate = /**/ lowerDateBound instanceof String ? /**/ parseDate(lowerDateBound.toString()) : /**/ lowerDateBound instanceof Date ? (Date) lowerDateBound : null; /**/
+        this.endingDate = /**/ upperDateBound instanceof String ? /**/ parseDate(upperDateBound.toString()) : /**/ upperDateBound instanceof Date ? (Date) upperDateBound : null; /**/
     }
 
     @Override

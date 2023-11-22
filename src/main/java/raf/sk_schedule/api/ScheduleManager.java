@@ -24,18 +24,11 @@ public interface ScheduleManager {
     /**
      * Initialize the schedule with specific starting and ending dates.
      *
-     * @param startDate The date when the schedule's accounting period starts.
-     * @param endDate   The date when the schedule's accounting period ends.
+     * @param lowerDateBound The date when the schedule's accounting period starts.
+     * @param upperDateBound The date when the schedule's accounting period ends.
      */
-    void initialize(String startDate, String endDate);
+    void initialize(Object lowerDateBound, Object upperDateBound);
 
-    /**
-     * Initialize the schedule with specific starting and ending dates.
-     *
-     * @param startDate The date when the schedule's accounting period start.
-     * @param endDate   The date when the schedule's accounting period ends.
-     */
-    void initialize(Date startDate, Date endDate);
 
     void setExcludedWeekDays(WeekDay... days);
 
@@ -108,11 +101,11 @@ public interface ScheduleManager {
     /**
      * Add a time slot to the schedule.
      *
-     * @param timeSlot The time slot to be added.
+     * @param scheduleSlot The time slot to be added.
      * @return True if the time slot was successfully added; false otherwise.
      * @throws ScheduleException if a slot is already occupied
      */
-    boolean scheduleTimeSlot(ScheduleSlot timeSlot) throws ScheduleException;
+    boolean bookScheduleSlot(ScheduleSlot scheduleSlot) throws ScheduleException;
 
     /**
      * Schedules a repetitive time slot based on the provided parameters. The slot can be set by
@@ -129,7 +122,7 @@ public interface ScheduleManager {
      * @return The list of ScheduleSlot objects that have been mapped by using specified repetitive recurrence parameters.
      * @throws ScheduleException If the time-space collision is detected and the repetitive time slot can't be scheduled.
      */
-    List<ScheduleSlot> scheduleRepetitiveTimeSlot(String startTime,
+    List<ScheduleSlot> bookRepetitiveScheduleSlot(String startTime,
                                                   int duration,
                                                   String endTime,
                                                   WeekDay weekDay,
@@ -147,33 +140,35 @@ public interface ScheduleManager {
      * @return The list containing all ScheduleSlot objects that have been mapped using the recurrenceInterval argument object.
      * @throws ScheduleException If the time-space collision is detected and the repetitive time slot can't be scheduled.
      */
-    List<ScheduleSlot> scheduleRepetitiveTimeSlot(RepetitiveScheduleMapper recurrenceInterval) throws ScheduleException;
+    List<ScheduleSlot> bookRepetitiveScheduleSlot(RepetitiveScheduleMapper recurrenceInterval) throws ScheduleException;
 
 
     /**
      * Delete a time slot from the schedule.
      *
-     * @param timeSlot The time slot to be deleted.
-     * @return List containing one or more ScheduleSlot objects that have been removed as a result of this action.
-     * @throws ScheduleException if argument timeSlot can not be found in schedule thus it can't be deleted.
+     * @param scheduleSlot The time slot to be deleted.
+     * @return The list containing one or more ScheduleSlot objects that have been removed as a result of this action.
+     * @throws ScheduleException if argument scheduleSlot can not be found in schedule thus it can't be deleted.
      */
-    List<ScheduleSlot> deleteTimeSlot(ScheduleSlot timeSlot);
+    List<ScheduleSlot> deleteScheduleSlot(ScheduleSlot scheduleSlot);
 
-    /**
-     * Move a time slot to a new time and location.
-     *
-     * @param oldTimeSlot The original time slot.
-     * @param newTimeSlot The new time slot.
-     */
-    void moveTimeSlot(ScheduleSlot oldTimeSlot, ScheduleSlot newTimeSlot);
+
+    void moveScheduleSlot(ScheduleSlot scheduleSlot,
+                          Object newDate,
+                          String newStartTime,
+                          int newDuration,
+                          String newEndTime);
 
     /**
      * Check if a specific time slot is available.
      *
-     * @param timeSlot The time slot to check for availability.
-     * @return True if the time slot is available; false otherwise.
+     * @param scheduleSlot The time slot to check for availability.
+     * @return The list containing {@link ScheduleSlot} objects that are colliding with the {@code timeSlot} parameter.
      */
-    boolean isTimeSlotAvailable(ScheduleSlot timeSlot);
+    List<ScheduleSlot> isScheduleSlotAvailable(ScheduleSlot scheduleSlot);
+
+
+    List<ScheduleSlot> isScheduleSlotAvailable(String date, String startTime, String endTime, String location);
 
     /**
      * Get a list of free time slots within a specified date range.
@@ -182,7 +177,7 @@ public interface ScheduleManager {
      * @param endDate   The end date for the range. If null, it will be the latest date in the schedule.
      * @return A list of free time slots.
      */
-    List<ScheduleSlot> getFreeTimeSlots(String startDate, String endDate);
+    List<ScheduleSlot> getFreeScheduleSlots(Object startDate, Object endDate);
 
     /**
      * Search for time slots based on specific criteria.
@@ -193,15 +188,8 @@ public interface ScheduleManager {
     List<ScheduleSlot> searchTimeSlots(SearchCriteria criteria);
 
 
-    /**
-     * Export the schedule data to a CSV file within specified date bounds.
-     *
-     * @param filePath           The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
-     * @param lowerBound         The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound         The upper date bound for export. If null, it will be the latest date in the schedule.
-     * @param includedAttributes Optional additional attributes to include in the CSV string.
-     */
-    int exportScheduleCSV(String filePath, String lowerBound, String upperBound, String... includedAttributes);
+    int exportScheduleCSV(String filePath, Object lowerDateBound, Object upperDateBound, String... includedAttributes);
+
 
     /**
      * Export the filtered schedule data to a CSV file within specified date bounds.
@@ -215,11 +203,11 @@ public interface ScheduleManager {
     /**
      * Export the schedule data to a JSON file within specified date bounds.
      *
-     * @param filePath   The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
-     * @param lowerBound The lower date bound for export. If null, it will be the earliest date in the schedule.
-     * @param upperBound The upper date bound for export. If null, it will be the latest date in the schedule.
+     * @param filePath       The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param lowerDateBound The lower date bound for export. If null, it will be the earliest date in the schedule.
+     * @param upperDateBound The upper date bound for export. If null, it will be the latest date in the schedule.
      */
-    int exportScheduleJSON(String filePath, String lowerBound, String upperBound);
+    int exportScheduleJSON(String filePath, Object lowerDateBound, Object upperDateBound);
 
     /**
      * Export the filtered schedule data to a JSON file within specified date bounds.
@@ -252,11 +240,11 @@ public interface ScheduleManager {
      * If lowerBound is null, it uses the earliest date in the schedule.
      * If upperBound is null, it uses the latest date in the schedule.
      *
-     * @param lowerBoundDate The lower date bound for the schedule.
-     * @param upperBoundDate The upper date bound for the schedule.
+     * @param lowerDateBound The lower date bound for the schedule.
+     * @param upperDateBound The upper date bound for the schedule.
      * @return A list of schedule slots within the specified date bounds.
      */
-    public List<ScheduleSlot> getSchedule(Date lowerBoundDate, Date upperBoundDate);
+    public List<ScheduleSlot> getSchedule(Object lowerDateBound, Object upperDateBound);
 
     /**
      * Returns a list of all schedule slots in the schedule.
