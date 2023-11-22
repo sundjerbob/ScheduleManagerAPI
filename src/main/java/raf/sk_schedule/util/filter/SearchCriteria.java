@@ -57,7 +57,7 @@ public class SearchCriteria {
 
         supportedFilters[CriteriaFilter.DATE_KEY] = new DateFilter();
         supportedFilters[CriteriaFilter.WEEK_DAY_KEY] = new WeekDayFilter();
-        supportedFilters[CriteriaFilter.UPPER_BOUND_TIME_KEY] = new StartTimeFilter();
+        supportedFilters[CriteriaFilter.LOWER_BOUND_TIME_KEY] = new StartTimeFilter();
         supportedFilters[CriteriaFilter.UPPER_BOUND_TIME_KEY] = new EndTimeFilter();
         supportedFilters[CriteriaFilter.DURATION_KEY] = new DurationFilter();
         supportedFilters[CriteriaFilter.LOCATION_KEY] = new LocationFilter();

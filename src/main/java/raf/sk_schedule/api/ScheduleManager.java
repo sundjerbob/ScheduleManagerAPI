@@ -2,14 +2,15 @@ package raf.sk_schedule.api;
 
 import raf.sk_schedule.exception.ScheduleException;
 import raf.sk_schedule.exception.ScheduleIOException;
+import raf.sk_schedule.model.schedule_node.FreeScheduleSlot;
 import raf.sk_schedule.util.filter.SearchCriteria;
 import raf.sk_schedule.model.schedule_mapper.RepetitiveScheduleMapper;
 import raf.sk_schedule.model.location_node.RoomProperties;
 import raf.sk_schedule.model.schedule_node.ScheduleSlot;
 import raf.sk_schedule.api.Constants.WeekDay;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This interface represents the scheduling component API.
@@ -86,6 +87,14 @@ public interface ScheduleManager {
      * @return The room properties with the specified name, or null if not found.
      */
     public RoomProperties getRoomByName(String roomName);
+
+    List<RoomProperties> roomLookUp(
+            String name,
+            int capacity,
+            int hasComputers,
+            Boolean hasProjector,
+            Map<String, String> attributes
+    );
 
     /**
      * Delete a room from the schedule.
@@ -176,7 +185,7 @@ public interface ScheduleManager {
      * @param endDate   The end date for the range. If null, it will be the latest date in the schedule.
      * @return A list of free time slots.
      */
-    List<ScheduleSlot> getFreeScheduleSlots(Object startDate, Object endDate);
+    List<FreeScheduleSlot> getFreeScheduleSlots(Object startDate, Object endDate);
 
     /**
      * Search for time slots based on specific criteria.
@@ -184,7 +193,7 @@ public interface ScheduleManager {
      * @param criteria The search criteria (e.g., room, day, equipment).
      * @return A list of matching time slots.
      */
-    List<ScheduleSlot> searchTimeSlots(SearchCriteria criteria);
+    List<ScheduleSlot> searchScheduleSlots(SearchCriteria criteria);
 
 
     int exportScheduleCSV(String filePath, Object lowerDateBound, Object upperDateBound, String... includedAttributes);

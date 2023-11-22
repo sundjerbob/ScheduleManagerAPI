@@ -5,7 +5,6 @@ import raf.sk_schedule.exception.ScheduleException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
     }
 
 
-    protected boolean isExcludedDay(Object day) {
+    protected boolean isExcludedWeekDay(Object day) {
 
         WeekDay weekDay;
         if (day instanceof String)
@@ -39,7 +38,7 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
         else if (day instanceof WeekDay)
             weekDay = (WeekDay) day;
         else
-            throw new ScheduleException("The argument of this method: \"isExcludedDay()\" can be either string, number or WeekDay enumeration instance!");
+            throw new ScheduleException("The argument of this method: \"isExcludedWeekDay()\" can be either string, number or WeekDay enumeration instance!");
 
         return excludedDays.contains(weekDay);
     }
@@ -65,6 +64,9 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
 
             else if (excludedDay instanceof Number)
                 this.excludedDays.add(WeekDay.values()[(int) excludedDay]);
+            else
+                throw new ScheduleException("The arguments of this method: \"setExcludedDays()\" can be either string, number or WeekDay enumeration instance!");
+
         }
     }
 
