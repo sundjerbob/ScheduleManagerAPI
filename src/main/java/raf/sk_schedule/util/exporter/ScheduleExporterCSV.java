@@ -30,7 +30,7 @@ public class ScheduleExporterCSV {
         // Append additional attributes
         for (int i = 0; i < includedAttributes.length; i++) {
             csvSlot.append(
-                    slot.hasAttribute(includedAttributes[i]) ? slot.getAttribute(includedAttributes[i]) : "not_defined")
+                            slot.hasAttribute(includedAttributes[i]) ? slot.getAttribute(includedAttributes[i]) : "not_defined")
                     .append(i == includedAttributes.length - 1 ? "\n" : ", ");
         }
 
@@ -50,7 +50,7 @@ public class ScheduleExporterCSV {
      * @return A CSV-formatted string representing the provided list of `ScheduleSlot` instances.
      * @throws ScheduleException If the list is empty or contains elements that are not `ScheduleSlot` instances.
      */
-    public static String listToCSV(List<?> list, String... includedAttributes) throws ScheduleException{
+    public static String listToCSV(List<?> list, String... includedAttributes) throws ScheduleException {
         StringBuilder csv = new StringBuilder("date, start, end, location");
 
         // Append additional attributes header
@@ -65,7 +65,7 @@ public class ScheduleExporterCSV {
             if (!(o instanceof ScheduleSlot)) {
                 throw new ScheduleException("ScheduleExporterCSV:listToCSV() -> Invalid list content. Check if the list contains only ScheduleSlot instances.");
             }
-            csv.append(slotToCSV((ScheduleSlot) o));
+            csv.append(slotToCSV((ScheduleSlot) o, includedAttributes)).append('\n');
         }
 
         return csv.toString();

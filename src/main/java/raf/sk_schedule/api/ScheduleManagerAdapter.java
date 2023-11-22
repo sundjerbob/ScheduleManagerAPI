@@ -5,6 +5,7 @@ import raf.sk_schedule.exception.ScheduleException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -15,33 +16,20 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
 
     protected Date startingDate;
     protected Date endingDate;
-    protected List<WeekDay> excludedDays;
+    protected List<WeekDay> acceptableDays;
     protected SimpleDateFormat dateFormat;
     protected SimpleDateFormat dateTimeFormat;
 
 
     protected ScheduleManagerAdapter() {
-        excludedDays = new ArrayList<>();
+        acceptableDays = new ArrayList<>();
+        acceptableDays.addAll(Arrays.asList(WeekDay.values()));
         dateFormat = new SimpleDateFormat(DATE_FORMAT);
         dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
 
+
     }
 
-
-    protected boolean isExcludedWeekDay(Object day) {
-
-        WeekDay weekDay;
-        if (day instanceof String)
-            weekDay = Enum.valueOf(WeekDay.class, day.toString().toUpperCase());
-        if (day instanceof Number)
-            weekDay = WeekDay.values()[(int) day];
-        else if (day instanceof WeekDay)
-            weekDay = (WeekDay) day;
-        else
-            throw new ScheduleException("The argument of this method: \"isExcludedWeekDay()\" can be either string, number or WeekDay enumeration instance!");
-
-        return excludedDays.contains(weekDay);
-    }
 
     @Override
     public void initialize(Object lowerDateBound, Object upperDateBound) {
@@ -49,25 +37,11 @@ public abstract class ScheduleManagerAdapter implements ScheduleManager {
         this.endingDate = /**/ upperDateBound instanceof String ? /**/ parseDate(upperDateBound.toString()) : /**/ upperDateBound instanceof Date ? (Date) upperDateBound : null; /**/
     }
 
-    @Override
-    public void setExcludedWeekDays(Object... excludedDays) {
-        //reset the values
-        this.excludedDays = new ArrayList<>();
-        //fill in the new values
-        for (Object excludedDay : excludedDays) {
-
-            if (excludedDay instanceof String)
-                this.excludedDays.add(Enum.valueOf(WeekDay.class, excludedDay.toString().toUpperCase()));
-
-            else if (excludedDay instanceof WeekDay)
-                this.excludedDays.add((WeekDay) excludedDay);
-
-            else if (excludedDay instanceof Number)
-                this.excludedDays.add(WeekDay.values()[(int) excludedDay]);
-            else
-                throw new ScheduleException("The arguments of this method: \"setExcludedDays()\" can be either string, number or WeekDay enumeration instance!");
-
+    public void setExcludedWeekDays(WeekDay... excludedDays) {
+        for (WeekDay excluded : excludedDays) {
+            acceptableDays.remove(excluded);
         }
+
     }
 
     public Date getStartingDate() {

@@ -23,7 +23,7 @@ public interface ScheduleManager {
 
 
     /**
-     * Initialize the schedule with specific starting and ending dates.
+     * Initializes the schedule with specific starting and ending dates.
      *
      * @param lowerDateBound The date when the schedule's accounting period starts.
      * @param upperDateBound The date when the schedule's accounting period ends.
@@ -31,7 +31,12 @@ public interface ScheduleManager {
     void initialize(Object lowerDateBound, Object upperDateBound);
 
 
-    void setExcludedWeekDays(Object... days);
+    /**
+     * Sets the excluded week days for scheduling.
+     *
+     * @param days The week days to be excluded from scheduling.
+     */
+    void setExcludedWeekDays(WeekDay... days);
 
 
     /**
@@ -56,7 +61,7 @@ public interface ScheduleManager {
     public int loadScheduleSCV(String csvPath) throws ScheduleIOException;
 
     /**
-     * Checks whether the schedule contains a room with the specified name (roomName).
+     * Checks whether the schedule contains a room with the specified name.
      *
      * @param roomName The name of the room you are looking for.
      * @return True if a room with the specified name exists in the schedule, false otherwise.
@@ -71,23 +76,34 @@ public interface ScheduleManager {
     void addRoom(RoomProperties properties);
 
     /**
-     * Update the properties of an existing room in the schedule.
+     * Updates the properties of an existing room in the schedule.
      *
      * @param name    The name of the room to be updated.
      * @param newProp The updated properties of the room.
-     * @throws ScheduleException is thrown if there was no room with name equal to name param value.
+     * @throws ScheduleException If there was no room with a name equal to the provided name.
      */
     void updateRoom(String name, RoomProperties newProp);
 
 
     /**
-     * Get the room properties with the specified name.
+     * Gets the room properties with the specified name.
      *
      * @param roomName The name of the room to retrieve.
      * @return The room properties with the specified name, or null if not found.
      */
     public RoomProperties getRoomByName(String roomName);
 
+
+    /**
+     * Searches for rooms based on specific criteria.
+     *
+     * @param name        The name of the room.
+     * @param capacity    The capacity of the room.
+     * @param hasComputers Whether the room has computers.
+     * @param hasProjector Whether the room has a projector.
+     * @param attributes  Additional attributes for room filtering.
+     * @return A list of rooms matching the specified criteria.
+     */
     List<RoomProperties> roomLookUp(
             String name,
             int capacity,
@@ -107,11 +123,11 @@ public interface ScheduleManager {
 
 
     /**
-     * Add a time slot to the schedule.
+     * Adds a time slot to the schedule.
      *
      * @param scheduleSlot The time slot to be added.
      * @return True if the time slot was successfully added; false otherwise.
-     * @throws ScheduleException if a slot is already occupied
+     * @throws ScheduleException If a slot is already occupied.
      */
     boolean bookScheduleSlot(ScheduleSlot scheduleSlot) throws ScheduleException;
 
@@ -154,15 +170,23 @@ public interface ScheduleManager {
     ScheduleSlot getScheduleSlot(Object date, String startTime, String endTime, String location);
 
     /**
-     * Delete a time slot from the schedule.
+     * Deletes a time slot from the schedule.
      *
      * @param scheduleSlot The time slot to be deleted.
      * @return The list containing one or more ScheduleSlot objects that have been removed as a result of this action.
-     * @throws ScheduleException if argument scheduleSlot can not be found in schedule thus it can't be deleted.
+     * @throws ScheduleException If the provided scheduleSlot cannot be found in the schedule and thus cannot be deleted.
      */
     List<ScheduleSlot> deleteScheduleSlot(ScheduleSlot scheduleSlot);
 
-
+    /**
+     * Moves a time slot to a new date, start time, end time, and location.
+     *
+     * @param scheduleSlot The time slot to be moved.
+     * @param newDate       The new date for the time slot.
+     * @param newStartTime  The new start time for the time slot in "HH:mm" format.
+     * @param newEndTime    The new end time for the time slot in "HH:mm" format.
+     * @param newLocation   The new location for the time slot.
+     */
     void moveScheduleSlot(ScheduleSlot scheduleSlot,
                           Object newDate,
                           String newStartTime,
@@ -170,7 +194,7 @@ public interface ScheduleManager {
                           RoomProperties newLocation);
 
     /**
-     * Check if a specific time slot is available.
+     * Checks if a specific time slot is available.
      *
      * @param scheduleSlot The time slot to check for availability.
      * @return The list containing {@link ScheduleSlot} objects that are colliding with the {@code timeSlot} parameter.
@@ -178,10 +202,19 @@ public interface ScheduleManager {
     List<ScheduleSlot> isScheduleSlotAvailable(ScheduleSlot scheduleSlot);
 
 
+    /**
+     * Checks if a specific time slot is available.
+     *
+     * @param date     The date of the time slot to check.
+     * @param startTime The start time of the time slot to check.
+     * @param endTime   The end time of the time slot to check.
+     * @param location The location of the time slot to check.
+     * @return The list containing {@link ScheduleSlot} objects that are colliding with the specified time slot.
+     */
     List<ScheduleSlot> isScheduleSlotAvailable(Object date, String startTime, String endTime, String location);
 
     /**
-     * Get a list of free time slots within a specified date range.
+     * Gets a list of free time slots within a specified date range.
      *
      * @param startDate The start date for the range. If null, it will be the earliest date in the schedule.
      * @param endDate   The end date for the range. If null, it will be the latest date in the schedule.
@@ -190,40 +223,51 @@ public interface ScheduleManager {
     List<FreeScheduleSlot> getFreeScheduleSlots(Object startDate, Object endDate);
 
     /**
-     * Search for time slots based on specific criteria.
+     * Searches for time slots based on specific criteria.
      *
      * @param criteria The search criteria (e.g., room, day, equipment).
      * @return A list of matching time slots.
      */
     List<ScheduleSlot> searchScheduleSlots(SearchCriteria criteria);
 
-
+    /**
+     * Exports the schedule data to a CSV file within specified date bounds.
+     *
+     * @param filePath           The path to an existing file or path on which a new file will be created if it doesn't exist already.
+     * @param lowerDateBound     The lower date bound for export. If null, it will be the earliest date in the schedule.
+     * @param upperDateBound     The upper date bound for export. If null, it will be the latest date in the schedule.
+     * @param includedAttributes Optional additional attributes to include in the CSV string.
+     * @return The number of exported rows.
+     */
     int exportScheduleCSV(String filePath, Object lowerDateBound, Object upperDateBound, String... includedAttributes);
 
 
     /**
-     * Export the filtered schedule data to a CSV file within specified date bounds.
+     * Exports the filtered schedule data to a CSV file within specified date bounds.
      *
-     * @param filePath           The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param filePath           The path to an existing file or path on which a new file will be created if it doesn't exist already.
      * @param searchCriteria     The search criteria for filtering.
      * @param includedAttributes Optional additional attributes to include in the CSV string.
+     * @return The number of exported rows.
      */
     int exportFilteredScheduleCSV(String filePath, SearchCriteria searchCriteria, String... includedAttributes);
 
     /**
-     * Export the schedule data to a JSON file within specified date bounds.
+     * Exports the schedule data to a JSON file within specified date bounds.
      *
-     * @param filePath       The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param filePath       The path to an existing file or path on which a new file will be created if it doesn't exist already.
      * @param lowerDateBound The lower date bound for export. If null, it will be the earliest date in the schedule.
      * @param upperDateBound The upper date bound for export. If null, it will be the latest date in the schedule.
+     * @return The number of exported rows.
      */
     int exportScheduleJSON(String filePath, Object lowerDateBound, Object upperDateBound);
 
     /**
-     * Export the filtered schedule data to a JSON file within specified date bounds.
+     * Exports the filtered schedule data to a JSON file within specified date bounds.
      *
-     * @param filePath       The path to an existing file or path on witch a new file will be created in case it doesn't exist already.
+     * @param filePath       The path to an existing file or path on which a new file will be created if it doesn't exist already.
      * @param searchCriteria The search criteria for filtering.
+     * @return The number of exported rows.
      */
     int exportFilteredScheduleJSON(String filePath, SearchCriteria searchCriteria);
 
@@ -235,9 +279,7 @@ public interface ScheduleManager {
     public List<RoomProperties> getAllRooms();
 
     /**
-     * Gets the schedule slots within the specified date bounds (lowerBound and upperBound).
-     * If lowerBound is null, it uses the earliest date in the schedule.
-     * If upperBound is null, it uses the latest date in the schedule.
+     * Gets the schedule slots within the specified date bounds.
      *
      * @param lowerBoundDate The lower date bound for the schedule.
      * @param upperBoundDate The upper date bound for the schedule.
