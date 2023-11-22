@@ -91,6 +91,7 @@ public class ScheduleImporter {
 
         // read the rest of the rows and build slots
         for (int row = 1; row < lines.length; row++) {
+
             String[] values = lines[row].split(",");
 
             if (values.length < 4)  // check if there is non-sufficient number of columns missing from the current row
@@ -98,13 +99,20 @@ public class ScheduleImporter {
 
 
             ScheduleSlot.Builder slotBuilder = new ScheduleSlot.Builder()
-                    .setDate(parseDate(values[dateIndex]))
-                    .setStartTime(values[startIndex])
-                    .setLocation(rooms.get(values[locationIndex]));
+                    .setDate(parseDate(values[dateIndex].trim()))
+                    .setStartTime(values[startIndex].trim());
+
+            if (rooms.containsKey(values[locationIndex] = values[locationIndex].trim()))
+                slotBuilder.setLocation(rooms.get(values[locationIndex]));
+            else
+                throw new ScheduleIOException("ScheduleSCV parse failed! Room with name " + values[locationIndex] + " couldn't be linked.");
+
             if (durationIndex != -1)
-                slotBuilder.setDuration(Integer.parseInt(values[durationIndex]));
+                slotBuilder.setDuration(Integer.parseInt(values[durationIndex].trim()));
+
             if (endIndex != -1)
-                slotBuilder.setEndTime(values[endIndex]);
+                slotBuilder.setEndTime(values[endIndex].trim());
+
             // Add additional attributes for columns beyond the mandatory ones
             for (int i = 0; i < columnNames.length; i++) {
                 if (i != startIndex && i != locationIndex && i != durationIndex && i != endIndex) {

@@ -20,7 +20,7 @@ public class AbsolutStartComparator implements ScheduleSlotComparator {
     @Override
     public int compare(ScheduleSlot slot1, ScheduleSlot slot2) {
 
-        return ascendingOrder * Long.compare(slot2.getAbsoluteStartTimeMillis(), slot1.getAbsoluteStartTimeMillis());
+        return ascendingOrder * Long.compare(slot1.getAbsoluteStartTimeMillis(), slot2.getAbsoluteStartTimeMillis());
     }
 
 
