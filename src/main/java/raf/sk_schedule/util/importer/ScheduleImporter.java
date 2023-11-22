@@ -115,7 +115,7 @@ public class ScheduleImporter {
 
             // Add additional attributes for columns beyond the mandatory ones
             for (int i = 0; i < columnNames.length; i++) {
-                if (i != startIndex && i != locationIndex && i != durationIndex && i != endIndex) {
+                if (i != dateIndex && i != startIndex && i != locationIndex && i != durationIndex && i != endIndex) {
                     // This column is an extra attribute
                     slotBuilder.setAttribute(columnNames[i].trim(), values[i].trim());
                 }
