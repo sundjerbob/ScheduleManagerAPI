@@ -24,9 +24,10 @@ public class LocationFilter implements CriteriaFilter {
     public boolean filter(ScheduleSlot slot, SearchCriteria searchCriteria) {
         // Implementation for location filter
         Object searchParam = searchCriteria.getCriteria(LOCATION_KEY);
-        if (searchParam instanceof RoomProperties || searchParam instanceof String)
+        if (searchParam instanceof RoomProperties)
             return !slot.getLocation().equals(searchParam);
-
+        if ( searchParam instanceof String)
+            return !slot.getLocation().getName().equals((String) searchParam);
 
         throw new ScheduleException("Location search parameter can be set by stating the name of the room or a RoomProperties class object!");
     }

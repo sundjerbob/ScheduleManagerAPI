@@ -1,11 +1,9 @@
 package raf.sk_schedule.model.schedule_node;
 
 import raf.sk_schedule.model.location_node.RoomProperties;
-import raf.sk_schedule.model.schedule_mapper.RepetitiveScheduleMapper;
 
 import java.util.Date;
 
-import static raf.sk_schedule.util.exporter.ScheduleExporterJSON.serializeObject;
 
 public class FreeScheduleSlot {
 
@@ -22,6 +20,7 @@ public class FreeScheduleSlot {
         this.duration = duration;
         this.endTime = endTime;
         this.location = location;
+
     }
 
     @Override

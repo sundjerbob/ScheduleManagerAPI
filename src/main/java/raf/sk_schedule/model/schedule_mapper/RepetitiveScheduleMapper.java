@@ -37,6 +37,7 @@ public class RepetitiveScheduleMapper {
 
     // Private constructor to enforce the use of the Builder pattern
     private RepetitiveScheduleMapper(
+            RoomProperties location,
             Date recurrenceIntervalStart,
             Date recurrenceIntervalEnd,
             int recurrencePeriod,
@@ -44,7 +45,9 @@ public class RepetitiveScheduleMapper {
             String endTime,
             int duration,
             WeekDay weekDay
+
     ) {
+        this.location = location;
         this.recurrenceIntervalStart = recurrenceIntervalStart;
         this.recurrenceIntervalEnd = recurrenceIntervalEnd;
         this.startTime = startTime;
@@ -52,6 +55,7 @@ public class RepetitiveScheduleMapper {
         this.duration = duration;
         this.recurrencePeriod = recurrencePeriod;
         this.weekDay = weekDay;
+        linkedSlotInstances = new ArrayList<>();
     }
 
     /**
@@ -129,6 +133,7 @@ public class RepetitiveScheduleMapper {
     }
 
     /* Observer pattern support methods */
+
     /**
      * Synchronizes the shared state of this `RepetitiveScheduleMapper` instance with all linked `ScheduleSlot` instances.
      * This method is called internally to ensure that any changes made to the shared attributes are propagated
@@ -282,6 +287,7 @@ public class RepetitiveScheduleMapper {
      * with the desired settings.
      */
     public static class Builder {
+        private RoomProperties location;
         private Date recurrenceIntervalStart;
         private Date recurrenceIntervalEnd;
         private int recurrencePeriod;
@@ -289,6 +295,11 @@ public class RepetitiveScheduleMapper {
         private String endTime;
         private int duration;
         private WeekDay weekDay;
+
+        public Builder setLocation(RoomProperties location) {
+            this.location = location;
+            return this;
+        }
 
         /**
          * Default constructor initializes default mappers fields values.
@@ -409,6 +420,7 @@ public class RepetitiveScheduleMapper {
          */
         public RepetitiveScheduleMapper build() {
             return new RepetitiveScheduleMapper(
+                    location,
                     recurrenceIntervalStart,
                     recurrenceIntervalEnd,
                     recurrencePeriod,
